@@ -380,15 +380,15 @@ class MossRobotConfig(ManipulatorRobotConfig):
     leader_arms: dict[str, MotorsBusConfig] = field(
         default_factory=lambda: {
             "main": FeetechMotorsBusConfig(
-                port="/dev/tty.usbmodem58760431091",
+                port="/dev/tty.usbmodem5A4B0468311",
                 motors={
                     # name: (index, model)
-                    "shoulder_pan": [1, "sts3215"],
-                    "shoulder_lift": [2, "sts3215"],
-                    "elbow_flex": [3, "sts3215"],
-                    "wrist_flex": [4, "sts3215"],
-                    "wrist_roll": [5, "sts3215"],
-                    "gripper": [6, "sts3215"],
+                    "shoulder_pan": [1, "sts3215"], # ST3215 7.4V 1:191 (ST-3215-C044)
+                    "shoulder_lift": [2, "sts3215"], # ST3215 7.4V 1:345 (ST-3215-C001)
+                    "elbow_flex": [3, "sts3215"], # ST3215 7.4V 1:191 (ST-3215-C044)
+                    "wrist_flex": [4, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "wrist_roll": [5, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "gripper": [6, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
                 },
             ),
         }
@@ -397,7 +397,7 @@ class MossRobotConfig(ManipulatorRobotConfig):
     follower_arms: dict[str, MotorsBusConfig] = field(
         default_factory=lambda: {
             "main": FeetechMotorsBusConfig(
-                port="/dev/tty.usbmodem585A0076891",
+                port="/dev/tty.usbmodem5A4B0468251",
                 motors={
                     # name: (index, model)
                     "shoulder_pan": [1, "sts3215"],

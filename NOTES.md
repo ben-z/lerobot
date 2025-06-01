@@ -87,6 +87,15 @@ Disconnected from motor bus.
 
 </details>
 
+## Teleop with cameras
+
+```sh
+python lerobot/scripts/control_robot.py \
+  --robot.type=so101 \
+  --control.type=teleoperate \
+  --control.display_data=true
+```
+
 ## Dataset recording
 
 ```sh
@@ -195,4 +204,10 @@ python lerobot/scripts/control_robot.py \
   --control.policy.path=${HF_USER}/act_so101_test4 \
   --control.resume=true \
   --control.display_data=true
+```
+
+## Visualize a dataset
+
+```sh
+python lerobot/scripts/visualize_dataset_html.py --repo-id un1c0rnio/eval_act_so101_test4
 ```

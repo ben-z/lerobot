@@ -1,5 +1,6 @@
+# Notes
 
-Setting up the leader motors:
+## Setting up the leader motors:
 
 ```sh
 python lerobot/scripts/configure_motor.py \
@@ -85,3 +86,27 @@ Disconnected from motor bus.
 ```
 
 </details>
+
+## Training
+
+On a Linux machine with an NVIDIA GPU, you can use the following command to run the training:
+
+```sh
+# Log into Hugging Face
+huggingface-cli login
+
+# Log into Weights & Biases
+wandb login
+
+docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g huggingface/lerobot-gpu-dev bash
+
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/train.py \
+  --dataset.repo_id=${HF_USER}/so101_test \
+  --policy.type=act \
+  --output_dir=outputs/train/act_so101_test \
+  --job_name=act_so101_test_wato \
+  --policy.device=cuda \
+  --wandb.enable=true
+```

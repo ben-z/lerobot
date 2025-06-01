@@ -134,3 +134,23 @@ python lerobot/scripts/train.py \
   --num_workers=8 \
   --batch_size=32
 ```
+
+## Evaluation
+
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/control_robot.py \
+  --robot.type=so101 \
+  --control.type=record \
+  --control.fps=30 \
+  --control.single_task="Grasp a box and move it to the right side of the pencil." \
+  --control.repo_id=${HF_USER}/eval_act_so101_test \
+  --control.tags='["so101","tutorial"]' \
+  --control.warmup_time_s=2 \
+  --control.episode_time_s=30 \
+  --control.reset_time_s=2 \
+  --control.num_episodes=1 \
+  --control.push_to_hub=false \
+  --control.policy.path=outputs/train/act_so101_test/checkpoints/last/pretrained_model
+```

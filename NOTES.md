@@ -98,7 +98,7 @@ huggingface-cli login
 # Log into Weights & Biases
 wandb login
 
-docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g huggingface/lerobot-gpu-dev bash
+docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main bash
 
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"

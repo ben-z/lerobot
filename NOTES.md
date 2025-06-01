@@ -172,3 +172,21 @@ python lerobot/scripts/control_robot.py \
   --control.push_to_hub=false \
   --control.policy.path=outputs/train/act_so101_test/checkpoints/last/pretrained_model
 ```
+
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/control_robot.py \
+  --robot.type=so101 \
+  --control.type=record \
+  --control.fps=30 \
+  --control.single_task="Grasp a box and move it to the right side of the pencil." \
+  --control.repo_id=${HF_USER}/eval_act_so101_test4 \
+  --control.tags='["so101","tutorial"]' \
+  --control.warmup_time_s=2 \
+  --control.episode_time_s=30 \
+  --control.reset_time_s=2 \
+  --control.num_episodes=5 \
+  --control.push_to_hub=true \
+  --control.policy.path=${HF_USER}/act_so101_test4
+```

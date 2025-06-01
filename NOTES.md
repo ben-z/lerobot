@@ -125,10 +125,12 @@ docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 python lerobot/scripts/train.py \
-  --dataset.repo_id=${HF_USER}/so101_test \
+  --dataset.repo_id=${HF_USER}/so101_test4 \
   --policy.type=act \
-  --output_dir=outputs/train/act_so101_test \
-  --job_name=act_so101_test_wato \
+  --output_dir=outputs/train/act_so101_test4 \
+  --job_name=act_so101_test4_wato \
   --policy.device=cuda \
-  --wandb.enable=true
+  --wandb.enable=true \
+  --num_workers=8 \
+  --batch_size=32
 ```

@@ -155,6 +155,8 @@ huggingface-cli upload ${HF_USER}/act_so101_test4_${CKPT} \
 
 ## Evaluation
 
+With a local model:
+
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
@@ -172,6 +174,8 @@ python lerobot/scripts/control_robot.py \
   --control.push_to_hub=false \
   --control.policy.path=outputs/train/act_so101_test/checkpoints/last/pretrained_model
 ```
+
+With a model from the Hugging Face hub:
 
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)

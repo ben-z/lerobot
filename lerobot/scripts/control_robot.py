@@ -186,6 +186,8 @@ def calibrate(robot: Robot, cfg: CalibrateControlConfig):
             robot.home()
         return
 
+    logging.info(f"Available arms: {robot.available_arms}")
+    logging.info(f"Requested arms: {cfg.arms}")
     arms = robot.available_arms if cfg.arms is None else cfg.arms
     unknown_arms = [arm_id for arm_id in arms if arm_id not in robot.available_arms]
     available_arms_str = " ".join(robot.available_arms)
@@ -210,6 +212,7 @@ def calibrate(robot: Robot, cfg: CalibrateControlConfig):
         else:
             print(f"Calibration file not found '{arm_calib_path}'")
 
+    logging.info(f"{robot.is_connected=}")
     if robot.is_connected:
         robot.disconnect()
 

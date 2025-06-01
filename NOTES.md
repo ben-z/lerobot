@@ -129,37 +129,54 @@ huggingface-cli login
 # Log into Weights & Biases
 wandb login
 
-docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main bash
 
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-python lerobot/scripts/train.py \
-  --dataset.repo_id=${HF_USER}/so101_test4 \
+
+docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+  --dataset.repo_id=${HF_USER}/so101_box_pencil2 \
   --policy.type=act \
-  --output_dir=outputs/train/act_so101_test4 \
-  --job_name=act_so101_test4_wato \
+  --output_dir=outputs/train/act_so101_box_pencil2 \
+  --job_name=act_so101_box_pencil2_wato \
   --policy.device=cuda \
   --wandb.enable=true \
   --num_workers=8 \
   --batch_size=32
 ```
 
+Or using SLURM:
+
+```sh
+conda activate lerobot
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+sbatch --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 4:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+  --dataset.repo_id=${HF_USER}/so101_box_pencil2 \
+  --policy.type=act \
+  --output_dir=outputs/train/act_so101_box_pencil2 \
+  --job_name=act_so101_box_pencil2_wato \
+  --policy.device=cuda \
+  --wandb.enable=true \
+  --num_workers=8 \
+  --batch_size=32"
+```
+
 Upload the trained model to the Hugging Face hub:
 
 ```sh
-huggingface-cli upload ${HF_USER}/act_so101_test4 \
-  outputs/train/act_so101_test4/checkpoints/last/pretrained_model
+huggingface-cli upload ${HF_USER}/act_so101_box_pencil2 \
+  outputs/train/act_so101_box_pencil2/checkpoints/last/pretrained_model
 ```
 
 Upload a checkpoint only:
 
 ```sh
 # list checkpoints
-ls outputs/train/act_so101_test4/checkpoints
+ls outputs/train/act_so101_box_pencil2/checkpoints
 
 CKPT=020000
-huggingface-cli upload ${HF_USER}/act_so101_test4_${CKPT} \
-  outputs/train/act_so101_test4/checkpoints/${CKPT}/pretrained_model
+huggingface-cli upload ${HF_USER}/act_so101_box_pencil2_${CKPT} \
+  outputs/train/act_so101_box_pencil2/checkpoints/${CKPT}/pretrained_model
 ```
 
 ## Evaluation
@@ -194,14 +211,14 @@ python lerobot/scripts/control_robot.py \
   --control.type=record \
   --control.fps=30 \
   --control.single_task="Grasp a box and move it to the right side of the pencil." \
-  --control.repo_id=${HF_USER}/eval_act_so101_test4 \
+  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil2 \
   --control.tags='["so101","tutorial"]' \
   --control.warmup_time_s=2 \
   --control.episode_time_s=30 \
   --control.reset_time_s=2 \
   --control.num_episodes=5 \
   --control.push_to_hub=true \
-  --control.policy.path=${HF_USER}/act_so101_test4 \
+  --control.policy.path=${HF_USER}/act_so101_box_pencil2 \
   --control.resume=true \
   --control.display_data=true
 ```
@@ -209,5 +226,5 @@ python lerobot/scripts/control_robot.py \
 ## Visualize a dataset
 
 ```sh
-python lerobot/scripts/visualize_dataset_html.py --repo-id un1c0rnio/eval_act_so101_test4
+python lerobot/scripts/visualize_dataset_html.py --repo-id un1c0rnio/eval_act_so101_box_pencil2
 ```

@@ -135,6 +135,24 @@ python lerobot/scripts/train.py \
   --batch_size=32
 ```
 
+Upload the trained model to the Hugging Face hub:
+
+```sh
+huggingface-cli upload ${HF_USER}/act_so101_test4 \
+  outputs/train/act_so101_test4/checkpoints/last/pretrained_model
+```
+
+Upload a checkpoint only:
+
+```sh
+# list checkpoints
+ls outputs/train/act_so101_test4/checkpoints
+
+CKPT=020000
+huggingface-cli upload ${HF_USER}/act_so101_test4_${CKPT} \
+  outputs/train/act_so101_test4/checkpoints/${CKPT}/pretrained_model
+```
+
 ## Evaluation
 
 ```sh

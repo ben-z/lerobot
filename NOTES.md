@@ -211,17 +211,18 @@ python lerobot/scripts/control_robot.py \
   --control.type=record \
   --control.fps=30 \
   --control.single_task="Grasp a box and move it to the right side of the pencil." \
-  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil2 \
+  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil2_060000 \
   --control.tags='["so101","tutorial"]' \
   --control.warmup_time_s=2 \
-  --control.episode_time_s=30 \
+  --control.episode_time_s=60 \
   --control.reset_time_s=2 \
-  --control.num_episodes=5 \
+  --control.num_episodes=10 \
   --control.push_to_hub=true \
-  --control.policy.path=${HF_USER}/act_so101_box_pencil2 \
-  --control.resume=true \
+  --control.policy.path=${HF_USER}/act_so101_box_pencil2_060000 \
   --control.display_data=true
 ```
+
+Add `--control.resume=true` to resume in the same repo.
 
 ## Visualize a dataset
 

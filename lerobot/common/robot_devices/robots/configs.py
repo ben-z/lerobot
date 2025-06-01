@@ -383,12 +383,12 @@ class MossRobotConfig(ManipulatorRobotConfig):
                 port="/dev/tty.usbmodem5A4B0468311",
                 motors={
                     # name: (index, model)
-                    "shoulder_pan": [1, "sts3215"], # ST3215 7.4V 1:191 (ST-3215-C044)
-                    "shoulder_lift": [2, "sts3215"], # ST3215 7.4V 1:345 (ST-3215-C001)
-                    "elbow_flex": [3, "sts3215"], # ST3215 7.4V 1:191 (ST-3215-C044)
-                    "wrist_flex": [4, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
-                    "wrist_roll": [5, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
-                    "gripper": [6, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "shoulder_pan": [1, "sts3215"],  # ST3215 7.4V 1:191 (ST-3215-C044)
+                    "shoulder_lift": [2, "sts3215"],  # ST3215 7.4V 1:345 (ST-3215-C001)
+                    "elbow_flex": [3, "sts3215"],  # ST3215 7.4V 1:191 (ST-3215-C044)
+                    "wrist_flex": [4, "sts3215"],  # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "wrist_roll": [5, "sts3215"],  # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "gripper": [6, "sts3215"],  # ST3215 7.4V 1:147 (ST-3215-C046)
                 },
             ),
         }
@@ -446,12 +446,12 @@ class So101RobotConfig(ManipulatorRobotConfig):
                 port="/dev/tty.usbmodem5A4B0468311",
                 motors={
                     # name: (index, model)
-                    "shoulder_pan": [1, "sts3215"], # ST3215 7.4V 1:191 (ST-3215-C044)
-                    "shoulder_lift": [2, "sts3215"], # ST3215 7.4V 1:345 (ST-3215-C001)
-                    "elbow_flex": [3, "sts3215"], # ST3215 7.4V 1:191 (ST-3215-C044)
-                    "wrist_flex": [4, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
-                    "wrist_roll": [5, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
-                    "gripper": [6, "sts3215"], # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "shoulder_pan": [1, "sts3215"],  # ST3215 7.4V 1:191 (ST-3215-C044)
+                    "shoulder_lift": [2, "sts3215"],  # ST3215 7.4V 1:345 (ST-3215-C001)
+                    "elbow_flex": [3, "sts3215"],  # ST3215 7.4V 1:191 (ST-3215-C044)
+                    "wrist_flex": [4, "sts3215"],  # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "wrist_roll": [5, "sts3215"],  # ST3215 7.4V 1:147 (ST-3215-C046)
+                    "gripper": [6, "sts3215"],  # ST3215 7.4V 1:147 (ST-3215-C046)
                 },
             ),
         }

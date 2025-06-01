@@ -106,11 +106,11 @@ python lerobot/scripts/control_robot.py \
   --control.type=record \
   --control.fps=30 \
   --control.single_task="Grasp a box and move it to the right side of the pencil." \
-  --control.repo_id=${HF_USER}/so101_test4 \
-  --control.tags='["so101","tutorial"]' \
+  --control.repo_id=${HF_USER}/so101_box_pencil2 \
+  --control.tags='["so101"]' \
   --control.warmup_time_s=2 \
   --control.episode_time_s=30 \
-  --control.reset_time_s=2 \
+  --control.reset_time_s=1 \
   --control.num_episodes=25 \
   --control.display_data=true \
   --control.push_to_hub=true

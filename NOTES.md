@@ -198,15 +198,15 @@ Training [SmolVLA](https://huggingface.co/blog/smolvla):
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --cpus-per-task 8 --mem 12G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+sbatch --cpus-per-task 10 --mem 28G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=10g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
   --dataset.repo_id=${HF_USER}/so101_box_pencil3 \
   --policy.path=lerobot/smolvla_base \
   --output_dir=outputs/train/smolvla_so101_box_pencil3 \
-  --job_name=smolvla_so101_box_pencil3_wato_test1 \
+  --job_name=smolvla_so101_box_pencil3_wato \
   --policy.device=cuda \
   --wandb.enable=true \
   --num_workers=8 \
-  --batch_size=128 \
+  --batch_size=64 \
   --steps=200_000"
 ```
 

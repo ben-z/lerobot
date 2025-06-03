@@ -161,6 +161,19 @@ sbatch --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 4:
   --batch_size=32"
 ```
 
+To resume training from a checkpoint, use `--resume=true`:
+
+```sh
+python lerobot/scripts/train.py \
+  --config_path=outputs/train/act_so101_box_pencil2/checkpoints/last/pretrained_model/train_config.json \
+  --resume=true
+
+# or in SLURM
+sbatch --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 4:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+  --config_path=outputs/train/act_so101_box_pencil2/checkpoints/last/pretrained_model/train_config.json \
+  --resume=true"
+```
+
 Upload the trained model to the Hugging Face hub:
 
 ```sh

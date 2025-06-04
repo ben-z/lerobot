@@ -212,7 +212,7 @@ sbatch --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24
 
 ## Evaluation
 
-With a local model:
+### With a local model
 
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
@@ -232,7 +232,8 @@ python lerobot/scripts/control_robot.py \
   --control.policy.path=outputs/train/act_so101_test/checkpoints/last/pretrained_model
 ```
 
-With a model from the Hugging Face hub:
+### With a model from the Hugging Face hub
+
 
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
@@ -250,10 +251,15 @@ python lerobot/scripts/control_robot.py \
   --control.num_episodes=10 \
   --control.push_to_hub=true \
   --control.policy.path=${HF_USER}/smolvla_so101_box_pencil4_060000 \
-  --control.display_data=true
+  --control.display_data=true \
+  --control.policy.device=mps
 ```
 
 Add `--control.resume=true` to resume in the same repo.
+
+### Notes
+
+- The smolvla policy appears to run at 2fps instead of 30fps due to compute constraints. And the lack of damping appears to halt progress. When the arm is manually held down (add damping to reduce shaking), it slowly executes the task.
 
 ## Visualize a dataset
 

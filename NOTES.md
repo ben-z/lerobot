@@ -106,12 +106,12 @@ python lerobot/scripts/control_robot.py \
   --control.type=record \
   --control.fps=30 \
   --control.single_task="Grasp a box and move it to the right side of the pencil." \
-  --control.repo_id=${HF_USER}/so101_box_pencil3 \
+  --control.repo_id=${HF_USER}/so101_box_pencil4 \
   --control.tags='["so101"]' \
   --control.warmup_time_s=2 \
   --control.episode_time_s=30 \
   --control.reset_time_s=1 \
-  --control.num_episodes=25 \
+  --control.num_episodes=50 \
   --control.display_data=true \
   --control.push_to_hub=true
 ```
@@ -150,11 +150,11 @@ Or using SLURM:
 conda activate lerobot
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
-  --dataset.repo_id=${HF_USER}/so101_box_pencil3 \
+sbatch --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+  --dataset.repo_id=${HF_USER}/so101_box_pencil4 \
   --policy.type=act \
-  --output_dir=outputs/train/act_so101_box_pencil3 \
-  --job_name=act_so101_box_pencil3_wato \
+  --output_dir=outputs/train/act_so101_box_pencil4 \
+  --job_name=act_so101_box_pencil4_wato \
   --policy.device=cuda \
   --wandb.enable=true \
   --num_workers=8 \
@@ -198,14 +198,14 @@ Training [SmolVLA](https://huggingface.co/blog/smolvla):
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --cpus-per-task 10 --mem 28G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=10g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
-  --dataset.repo_id=${HF_USER}/so101_box_pencil3 \
+sbatch --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 24:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+  --dataset.repo_id=${HF_USER}/so101_box_pencil4 \
   --policy.path=lerobot/smolvla_base \
-  --output_dir=outputs/train/smolvla_so101_box_pencil3 \
-  --job_name=smolvla_so101_box_pencil3_wato \
+  --output_dir=outputs/train/smolvla_so101_box_pencil4 \
+  --job_name=smolvla_so101_box_pencil4_wato \
   --policy.device=cuda \
   --wandb.enable=true \
-  --num_workers=8 \
+  --num_workers=4 \
   --batch_size=64 \
   --steps=200_000"
 ```
@@ -242,14 +242,14 @@ python lerobot/scripts/control_robot.py \
   --control.type=record \
   --control.fps=30 \
   --control.single_task="Grasp a box and move it to the right side of the pencil." \
-  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil3_140000 \
+  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil3 \
   --control.tags='["so101","tutorial"]' \
   --control.warmup_time_s=2 \
   --control.episode_time_s=60 \
   --control.reset_time_s=2 \
   --control.num_episodes=10 \
   --control.push_to_hub=true \
-  --control.policy.path=${HF_USER}/act_so101_box_pencil3_140000 \
+  --control.policy.path=${HF_USER}/act_so101_box_pencil3 \
   --control.display_data=true
 ```
 

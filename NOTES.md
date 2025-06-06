@@ -176,7 +176,7 @@ python lerobot/scripts/train.py \
   --resume=true
 
 # or in SLURM
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
   --config_path=outputs/train/act_so101_box_pencil5/checkpoints/last/pretrained_model/train_config.json \
   --resume=true"
 ```
@@ -249,14 +249,14 @@ python lerobot/scripts/control_robot.py \
   --control.type=record \
   --control.fps=30 \
   --control.single_task="Grasp a box and move it to the right side of the pencil." \
-  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil5 \
+  --control.repo_id=${HF_USER}/eval_act_so101_box_pencil5_040000 \
   --control.tags='["so101"]' \
   --control.warmup_time_s=2 \
   --control.episode_time_s=60 \
   --control.reset_time_s=2 \
   --control.num_episodes=10 \
   --control.push_to_hub=true \
-  --control.policy.path=${HF_USER}/act_so101_box_pencil5 \
+  --control.policy.path=${HF_USER}/act_so101_box_pencil5_040000 \
   --control.display_data=true \
   --control.policy.device=mps
 ```

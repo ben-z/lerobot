@@ -163,7 +163,7 @@ sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090
   --job_name=act_so101_box_pencil5_wato \
   --policy.device=cuda \
   --wandb.enable=true \
-  --num_workers=8 \
+  --num_workers=4 \
   --batch_size=32 \
   --steps=400_000"
 ```
@@ -176,7 +176,7 @@ python lerobot/scripts/train.py \
   --resume=true
 
 # or in SLURM
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 3-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 16G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
   --config_path=outputs/train/act_so101_box_pencil5/checkpoints/last/pretrained_model/train_config.json \
   --resume=true"
 ```
@@ -204,14 +204,14 @@ Training [SmolVLA](https://huggingface.co/blog/smolvla):
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 3-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu-dev2:main python lerobot/scripts/train.py \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu-dev2:main python lerobot/scripts/train.py \
   --dataset.repo_id=${HF_USER}/so101_box_pencil5 \
   --policy.path=lerobot/smolvla_base \
   --output_dir=outputs/train/smolvla_so101_box_pencil5 \
   --job_name=smolvla_so101_box_pencil5_wato \
   --policy.device=cuda \
   --wandb.enable=true \
-  --num_workers=4 \
+  --num_workers=2 \
   --batch_size=64 \
   --steps=200_000"
 ```

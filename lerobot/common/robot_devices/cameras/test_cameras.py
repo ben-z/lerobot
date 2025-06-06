@@ -3,6 +3,7 @@ import cv2
 
 def test_cameras(indices):
     caps = []
+    frames = []
     for i in indices:
         cap = cv2.VideoCapture(i)
         if not cap.isOpened():
@@ -23,9 +24,22 @@ def test_cameras(indices):
         ret, frame = cap.read()
         if not ret:
             print(f"Camera {i} opened but failed to read frame")
+            frames.append((i, None))
         else:
             print(f"Camera {i} opened and frame read OK, shape={frame.shape}")
+            frames.append((i, frame))
         caps.append(cap)
+
+    # After reading all frames, display them
+    for i, frame in frames:
+        if frame is not None:
+            window_name = f"Camera {i}"
+            cv2.imshow(window_name, frame)
+            print(f"Press any key in the image window to close Camera {i}")
+            cv2.waitKey(0)
+            cv2.destroyWindow(window_name)
+        else:
+            print(f"No frame to display for Camera {i}")
     
     for cap in caps:
         cap.release()

@@ -1,5 +1,84 @@
 # Notes
 
+Docs: https://huggingface.co/docs/lerobot/so101
+
+## Environment setup
+
+```sh
+conda activate lerobot
+export HF_LEROBOT_HOME=./hf-home
+```
+
+## Hardware info
+
+`l1`: `/dev/tty.usbmodem5A4B0468311`
+`f1`: `/dev/tty.usbmodem5A4B0468251`
+
+## Calibration
+
+```sh
+# l1
+python -m lerobot.calibrate \
+    --teleop.type=so101_leader \
+    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.id=l1
+
+# f1
+python -m lerobot.calibrate \
+    --robot.type=so101_follower \
+    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.id=f1
+```
+
+## Teleop
+
+```sh
+python -m lerobot.teleoperate \
+    --robot.type=so101_follower \
+    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.id=f1 \
+    --teleop.type=so101_leader \
+    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.id=l1
+```
+
+With cameras:
+
+```sh
+python -m lerobot.teleoperate \
+    --robot.type=so101_follower \
+    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.id=f1 \
+    --robot.cameras="{ extside: {type: opencv, index_or_path: 0, width: 1920, height: 1080, fps: 25}, base: {type: opencv, index_or_path: 1, width: 1920, height: 1080, fps: 25},endeffector: {type: opencv, index_or_path: 2, width: 1920, height: 1080, fps: 25} }" \
+    --teleop.type=so101_leader \
+    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.id=l1 \
+    --display_data=true
+```
+
+## Record a dataset
+
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python -m lerobot.record \
+    --robot.type=so101_follower \
+    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.id=f1 \
+    --robot.cameras="{ extside: {type: opencv, index_or_path: 0, width: 1920, height: 1080, fps: 25}, base: {type: opencv, index_or_path: 1, width: 1920, height: 1080, fps: 25},endeffector: {type: opencv, index_or_path: 2, width: 1920, height: 1080, fps: 25} }" \
+    --teleop.type=so101_leader \
+    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.id=l1 \
+    --display_data=false \
+    --dataset.episode_time_s=60 \
+    --dataset.reset_time_s=1 \
+    --dataset.num_episodes=2 \
+    --dataset.repo_id=${HF_USER}/new-arch-record-test1 \
+    --dataset.single_task="Grasp a box and move it to the right side of the pencil."
+```
+
+# Legacy Notes
+
 ## Setting up the leader motors:
 
 ```sh

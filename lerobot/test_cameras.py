@@ -44,8 +44,7 @@ def test_cameras(indices):
     for cap in caps:
         cap.release()
 
-# Example: let's just try 0,1,2 (edit as needed)
 camera_indices = [0, 1, 2]
 
-print("=== Testing all 3 cameras on the same hub ===")
+print(f"=== Testing all {len(camera_indices)} cameras on the same hub ===")
 test_cameras(camera_indices)

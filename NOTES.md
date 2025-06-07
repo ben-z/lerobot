@@ -65,7 +65,7 @@ python -m lerobot.record \
     --robot.type=so101_follower \
     --robot.port=/dev/tty.usbmodem5A4B0468251 \
     --robot.id=f1 \
-    --robot.cameras="{ extside: {type: opencv, index_or_path: 0, width: 1920, height: 1080, fps: 25}, base: {type: opencv, index_or_path: 1, width: 1920, height: 1080, fps: 25},endeffector: {type: opencv, index_or_path: 2, width: 1920, height: 1080, fps: 25} }" \
+    --robot.cameras="{ extside: {type: opencv, index_or_path: 0, width: 640, height: 480, fps: 25}, base: {type: opencv, index_or_path: 1, width: 640, height: 480, fps: 25},endeffector: {type: opencv, index_or_path: 2, width: 640, height: 480, fps: 25} }" \
     --teleop.type=so101_leader \
     --teleop.port=/dev/tty.usbmodem5A4B0468311 \
     --teleop.id=l1 \

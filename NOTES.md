@@ -77,6 +77,11 @@ python -m lerobot.record \
     --dataset.single_task="Grasp a box and move it to the right side of the pencil."
 ```
 
+## TODO
+
+- [x] Figure out why camera resolution is not being set properly.
+  - https://github.com/huggingface/lerobot/pull/1225
+
 # Legacy Notes
 
 ## Setting up the leader motors:

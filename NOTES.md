@@ -1,6 +1,8 @@
 # Notes
 
-Docs: https://huggingface.co/docs/lerobot/so101
+Docs:
+- https://huggingface.co/docs/lerobot/getting_started_real_world_robot
+- https://huggingface.co/docs/lerobot/so101
 
 ## Hardware info
 
@@ -12,6 +14,7 @@ Docs: https://huggingface.co/docs/lerobot/so101
 ```sh
 conda activate lerobot
 export HF_LEROBOT_HOME=./hf-home
+export HF_USER=$(huggingface-cli whoami | head -n 1)
 
 export L1_PORT=/dev/tty.usbmodem5A4B0468311
 export F1_PORT=/dev/tty.usbmodem5A4B0468251
@@ -111,6 +114,32 @@ telegrip --left-port /dev/tty.usbmodem5A4B0468251 --right-port /dev/tty.usbmodem
 ```
 
 Result: not working. The command queue doesn't appear to be processed.
+
+## Training
+
+Same as the legacy notes.
+
+## Evaluation
+
+```sh
+python -m lerobot.record  \
+  --robot.type=so101_follower \
+  --robot.port=$F1_PORT \
+  --robot.cameras="${CAMERA_CONFIG}" \
+  --robot.id=f1 \
+  --teleop.type=so101_leader \
+  --teleop.port=$L1_PORT \
+  --teleop.id=l1 \
+  --dataset.episode_time_s=60 \
+  --dataset.reset_time_s=1 \
+  --dataset.num_episodes=25 \
+  --display_data=true \
+  --dataset.repo_id=$HF_USER/eval_so101_box_pencil6_020000 \
+  --dataset.single_task="Grasp a box and move it to the right side of the pencil." \
+  --policy.path=${HF_USER}/act_so101_box_pencil6_020000
+```
+
+As before, use `--resume=true` to resume the evaluation from the last episode.
 
 
 ## TODO
@@ -315,19 +344,19 @@ sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090
 Upload the trained model to the Hugging Face hub:
 
 ```sh
-huggingface-cli upload ${HF_USER}/act_so101_box_pencil5 \
-  outputs/train/act_so101_box_pencil5/checkpoints/last/pretrained_model
+huggingface-cli upload ${HF_USER}/act_so101_box_pencil6 \
+  outputs/train/act_so101_box_pencil6/checkpoints/last/pretrained_model
 ```
 
 Upload a checkpoint only:
 
 ```sh
 # list checkpoints
-ls outputs/train/act_so101_box_pencil5/checkpoints
+ls outputs/train/act_so101_box_pencil6/checkpoints
 
 CKPT=020000
-huggingface-cli upload ${HF_USER}/act_so101_box_pencil5_${CKPT} \
-  outputs/train/act_so101_box_pencil5/checkpoints/${CKPT}/pretrained_model
+huggingface-cli upload ${HF_USER}/act_so101_box_pencil6_${CKPT} \
+  outputs/train/act_so101_box_pencil6/checkpoints/${CKPT}/pretrained_model
 ```
 
 Training [SmolVLA](https://huggingface.co/blog/smolvla):

@@ -2,11 +2,19 @@
 
 Docs: https://huggingface.co/docs/lerobot/so101
 
+## Hardware info
+
+`l1`: `/dev/tty.usbmodem5A4B0468311`
+`f1`: `/dev/tty.usbmodem5A4B0468251`
+
 ## Environment setup
 
 ```sh
 conda activate lerobot
 export HF_LEROBOT_HOME=./hf-home
+
+export L1_PORT=/dev/tty.usbmodem5A4B0468311
+export F1_PORT=/dev/tty.usbmodem5A4B0468251
 ```
 
 ### Camera configs
@@ -15,25 +23,19 @@ export HF_LEROBOT_HOME=./hf-home
 export CAMERA_CONFIG="{ base: {type: opencv, index_or_path: 0, width: 640, height: 480, fps: 30}, top: {type: opencv, index_or_path: 1, width: 640, height: 480, fps: 30}, endeffector: {type: opencv, index_or_path: 2, width: 480, height: 640, fps: 30, rotation: -90} }"
 ```
 
-
-## Hardware info
-
-`l1`: `/dev/tty.usbmodem5A4B0468311`
-`f1`: `/dev/tty.usbmodem5A4B0468251`
-
 ## Calibration
 
 ```sh
 # l1
 python -m lerobot.calibrate \
     --teleop.type=so101_leader \
-    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.port=$L1_PORT \
     --teleop.id=l1
 
 # f1
 python -m lerobot.calibrate \
     --robot.type=so101_follower \
-    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.port=$F1_PORT \
     --robot.id=f1
 ```
 
@@ -42,10 +44,10 @@ python -m lerobot.calibrate \
 ```sh
 python -m lerobot.teleoperate \
     --robot.type=so101_follower \
-    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.port=$F1_PORT \
     --robot.id=f1 \
     --teleop.type=so101_leader \
-    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.port=$L1_PORT \
     --teleop.id=l1
 ```
 
@@ -54,11 +56,11 @@ With cameras:
 ```sh
 python -m lerobot.teleoperate \
     --robot.type=so101_follower \
-    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.port=$F1_PORT \
     --robot.id=f1 \
     --robot.cameras="${CAMERA_CONFIG}" \
     --teleop.type=so101_leader \
-    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.port=$L1_PORT \
     --teleop.id=l1 \
     --display_data=true
 ```
@@ -70,19 +72,26 @@ HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 python -m lerobot.record \
     --robot.type=so101_follower \
-    --robot.port=/dev/tty.usbmodem5A4B0468251 \
+    --robot.port=$F1_PORT \
     --robot.id=f1 \
     --robot.cameras="${CAMERA_CONFIG}" \
     --teleop.type=so101_leader \
-    --teleop.port=/dev/tty.usbmodem5A4B0468311 \
+    --teleop.port=$L1_PORT \
     --teleop.id=l1 \
     --display_data=false \
     --dataset.episode_time_s=60 \
     --dataset.reset_time_s=1 \
-    --dataset.num_episodes=2 \
-    --dataset.repo_id=${HF_USER}/new-arch-record-test1 \
+    --dataset.num_episodes=25 \
+    --dataset.repo_id=${HF_USER}/so101_box_pencil6 \
     --dataset.single_task="Grasp a box and move it to the right side of the pencil."
 ```
+
+Use `--resume=true` to resume the recording from the last episode.
+
+### Recorded datasets
+
+- [so101_box_pencil6](https://huggingface.co/un1c0rnio/so101_box_pencil6): Base, top, and end effector cameras
+
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
 
@@ -111,6 +120,14 @@ Result: not working. The command queue doesn't appear to be processed.
 
 
 
+
+
+
+<!--
+---------------------------------------------------------
+MARK: Legacy notes
+---------------------------------------------------------
+-->
 
 # Legacy Notes
 

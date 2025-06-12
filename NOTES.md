@@ -287,11 +287,11 @@ Or using SLURM:
 conda activate lerobot
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 3-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
-  --dataset.repo_id=${HF_USER}/so101_box_pencil5 \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+  --dataset.repo_id=${HF_USER}/so101_box_pencil6 \
   --policy.type=act \
-  --output_dir=outputs/train/act_so101_box_pencil5 \
-  --job_name=act_so101_box_pencil5_wato \
+  --output_dir=outputs/train/act_so101_box_pencil6 \
+  --job_name=act_so101_box_pencil6_wato \
   --policy.device=cuda \
   --wandb.enable=true \
   --num_workers=4 \
@@ -336,10 +336,10 @@ Training [SmolVLA](https://huggingface.co/blog/smolvla):
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu-dev2:main python lerobot/scripts/train.py \
-  --dataset.repo_id=${HF_USER}/so101_box_pencil5 \
+  --dataset.repo_id=${HF_USER}/so101_box_pencil6 \
   --policy.path=lerobot/smolvla_base \
-  --output_dir=outputs/train/smolvla_so101_box_pencil5 \
-  --job_name=smolvla_so101_box_pencil5_wato \
+  --output_dir=outputs/train/smolvla_so101_box_pencil6 \
+  --job_name=smolvla_so101_box_pencil6_wato \
   --policy.device=cuda \
   --wandb.enable=true \
   --num_workers=2 \

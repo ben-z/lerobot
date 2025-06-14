@@ -81,12 +81,12 @@ python -m lerobot.record \
     --teleop.type=so101_leader \
     --teleop.port=$L1_PORT \
     --teleop.id=l1 \
-    --display_data=false \
+    --display_data=true \
     --dataset.episode_time_s=60 \
     --dataset.reset_time_s=1 \
-    --dataset.num_episodes=25 \
-    --dataset.repo_id=${HF_USER}/so101_box_pencil6 \
-    --dataset.single_task="Grasp a box and move it to the right side of the pencil."
+    --dataset.num_episodes=50 \
+    --dataset.repo_id=${HF_USER}/so101_sock_stowing2 \
+    --dataset.single_task="Put the sock in the container"
 ```
 
 Use `--resume=true` to resume the recording from the last episode.

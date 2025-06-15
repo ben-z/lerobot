@@ -436,6 +436,7 @@ def build_dataset_frame(
         elif ft["dtype"] == "float32" and len(ft["shape"]) == 1:
             frame[key] = np.array([values[name] for name in ft["names"]], dtype=np.float32)
             if key == "observation.images.top":
+                print("drawing top camera overlay box")
                 # draw an overlay box
                 cv2.rectangle(frame[key], (350, 100), (550, 300), (0, 255, 0), 4)
         elif ft["dtype"] in ["image", "video"]:

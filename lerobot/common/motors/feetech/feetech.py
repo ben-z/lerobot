@@ -16,6 +16,8 @@ import logging
 from copy import deepcopy
 from enum import Enum
 from pprint import pformat
+import os
+import time
 
 from lerobot.common.utils.encoding_utils import decode_sign_magnitude, encode_sign_magnitude
 
@@ -233,6 +235,7 @@ class FeetechMotorsBus(MotorsBus):
     def is_calibrated(self) -> bool:
         motors_calibration = self.read_calibration()
         if set(motors_calibration) != set(self.calibration):
+            print(f"Motor setup mismatch during calibration check! {motors_calibration=} {self.calibration=}")
             return False
 
         same_ranges = all(
@@ -241,12 +244,20 @@ class FeetechMotorsBus(MotorsBus):
             for motor, cal in motors_calibration.items()
         )
         if self.protocol_version == 1:
+            print(f"Returning {same_ranges=}")
             return same_ranges
 
         same_offsets = all(
             self.calibration[motor].homing_offset == cal.homing_offset
             for motor, cal in motors_calibration.items()
         )
+        print(f"Calibration status: {same_ranges=}, {same_offsets=}")
+        if os.getenv("OVERWRITE_CALIBRATION") == "true" and (not same_ranges or not same_offsets):
+            print(f"overwriting calibration in 5 seconds...")
+            time.sleep(5)
+            self.write_calibration(self.calibration)
+            return self.is_calibrated
+
         return same_ranges and same_offsets
 
     def read_calibration(self) -> dict[str, MotorCalibration]:

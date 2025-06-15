@@ -442,7 +442,7 @@ def build_dataset_frame(
             if key == "observation.images.top":
                 print("drawing top camera overlay box")
                 # draw an overlay box
-                frame[key] = cv2.rectangle(frame[key], (350, 100), (550, 300), (0, 255, 0), 4)
+                # frame[key] = cv2.rectangle(frame[key], (350, 100), (550, 300), (0, 255, 0), 4)
 
     return frame
 

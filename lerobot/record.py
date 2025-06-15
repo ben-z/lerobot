@@ -196,8 +196,9 @@ def record_loop(
         if policy is not None or dataset is not None:
             observation_frame = build_dataset_frame(dataset.features, observation, prefix="observation")
             if len(boxes) == 0:
-                boxes = draw_box.get_box(observation_frame["observation.images.top"])
+                boxes = draw_box.draw_box.get_box(observation_frame["observation.images.top"])
             observation_frame["observation.images.top"] = cv2.rectangle(observation_frame["observation.images.top"], boxes[0], boxes[1], (0, 255, 0), 4)
+            observation_frame["observation.images.top"] = cv2.rectangle(observation_frame["observation.images.top"], boxes[2], boxes[3], (0, 0, 255), 4)
             
 
         if policy is not None:

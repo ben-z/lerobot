@@ -1,10 +1,11 @@
 import json
 from google import genai
 from google.genai import types
+from PIL import Image
 
 client = genai.Client(api_key="AIzaSyDwTSty8LLYSKfaCRQyp7z6CkjZh0iYsGc")
 
-model_name = "gemini-2.5-flash-preview-05-20"
+model_name = "gemini-2.5-pro-preview-06-05"
 bounding_box_system_instructions = """
 Return bounding boxes as a JSON array with labels. Never return masks or code fencing. Limit to 2 objects.
 """
@@ -45,9 +46,13 @@ def get_box(img):
 
 
 # # Run model to find bounding boxes
+    # import pdb; pdb.set_trace()
+    print(f"{img.shape=}")
+    img_obj = Image.fromarray(img)
+    print(f"{img_obj.size=}")
     response = client.models.generate_content(
         model=model_name,
-        contents=[prompt, img],
+        contents=[prompt, img_obj],
         config=types.GenerateContentConfig(
             system_instruction=bounding_box_system_instructions,
             temperature=0.5,
@@ -55,7 +60,7 @@ def get_box(img):
         )
     )
 
-    width, height = img.size
+    height, width, _depth = img.shape
 
     # Parsing out the markdown fencing
     bounding_boxes = parse_json(response.text)
@@ -75,5 +80,10 @@ def get_box(img):
         if abs_y1 > abs_y2:
             abs_y1, abs_y2 = abs_y2, abs_y1
 
-        boxes.append((abs_x1, abs_y1), (abs_x2, abs_y2))
+        boxes.append((abs_x1, abs_y1))
+        boxes.append((abs_x2, abs_y2))
+        # boxes.append((abs_y1, abs_x1))
+        # boxes.append((abs_y2, abs_x2))
+
+    print("Drawing boxes", boxes)
     return boxes

@@ -438,7 +438,7 @@ def build_dataset_frame(
             if key == "observation.images.top":
                 print("drawing top camera overlay box")
                 # draw an overlay box
-                cv2.rectangle(frame[key], (350, 100), (550, 300), (0, 255, 0), 4)
+                frame[key] = cv2.rectangle(frame[key], (350, 100), (550, 300), (0, 255, 0), 4)
         elif ft["dtype"] in ["image", "video"]:
             frame[key] = values[key.removeprefix(f"{prefix}.images.")]
 

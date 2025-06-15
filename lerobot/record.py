@@ -40,6 +40,8 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from pprint import pformat
+import cv2
+import draw_box.draw_box
 
 import numpy as np
 import rerun as rr
@@ -179,6 +181,9 @@ def record_loop(
 
     timestamp = 0
     start_episode_t = time.perf_counter()
+
+    boxes = []
+
     while timestamp < control_time_s:
         start_loop_t = time.perf_counter()
 
@@ -190,6 +195,10 @@ def record_loop(
 
         if policy is not None or dataset is not None:
             observation_frame = build_dataset_frame(dataset.features, observation, prefix="observation")
+            if len(boxes) == 0:
+                boxes = draw_box.get_box(observation_frame["observation.images.top"])
+            observation_frame["observation.images.top"] = cv2.rectangle(observation_frame["observation.images.top"], boxes[0], boxes[1], (0, 255, 0), 4)
+            
 
         if policy is not None:
             action_values = predict_action(

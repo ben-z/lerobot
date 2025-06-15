@@ -82,10 +82,10 @@ python -m lerobot.record \
     --teleop.port=$L1_PORT \
     --teleop.id=l1 \
     --display_data=true \
-    --dataset.episode_time_s=60 \
+    --dataset.episode_time_s=120 \
     --dataset.reset_time_s=1 \
     --dataset.num_episodes=50 \
-    --dataset.repo_id=${HF_USER}/so101_sock_stowing2 \
+    --dataset.repo_id=${HF_USER}/so101_sock_stowing_3pair2 \
     --dataset.single_task="Put the sock in the container"
 ```
 

@@ -1,6 +1,7 @@
 # This script tests opening and reading frames from cameras.
 import cv2
 
+
 def test_cameras(indices):
     caps = []
     frames = []

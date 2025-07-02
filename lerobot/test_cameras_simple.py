@@ -1,5 +1,3 @@
-
-
 import cv2
 
 camera_idx = 0

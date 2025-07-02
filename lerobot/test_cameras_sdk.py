@@ -16,14 +16,12 @@ camera_params = [
 ]
 
 # Construct an `OpenCVCameraConfig` with your desired FPS, resolution, color mode, and rotation.
-configs = [OpenCVCameraConfig(
-    index_or_path=idx,
-    fps=fps,
-    width=width,
-    height=height,
-    color_mode=ColorMode.RGB,
-    rotation=rotation
-) for idx, width, height, fps, rotation in camera_params]
+configs = [
+    OpenCVCameraConfig(
+        index_or_path=idx, fps=fps, width=width, height=height, color_mode=ColorMode.RGB, rotation=rotation
+    )
+    for idx, width, height, fps, rotation in camera_params
+]
 
 # Instantiate and connect an `OpenCVCamera`, performing a warm-up read (default).
 cameras = [OpenCVCamera(config) for config in configs]

@@ -41,9 +41,10 @@ def test_cameras(indices):
             cv2.destroyWindow(window_name)
         else:
             print(f"No frame to display for Camera {i}")
-    
+
     for cap in caps:
         cap.release()
+
 
 camera_indices = [0, 1, 2]
 

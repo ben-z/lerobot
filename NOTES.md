@@ -12,8 +12,9 @@ Docs:
 ## Environment setup
 
 ```sh
+cd src
 conda activate lerobot
-export HF_LEROBOT_HOME=./hf-home
+export HF_LEROBOT_HOME=../hf-home
 export HF_USER=$(huggingface-cli whoami | head -n 1)
 
 export L1_PORT=/dev/tty.usbmodem5A4B0468311

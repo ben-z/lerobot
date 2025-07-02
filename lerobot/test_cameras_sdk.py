@@ -1,9 +1,12 @@
 # Tests cameras using the lerobot SDK
 
-from lerobot.common.cameras.opencv.configuration_opencv import OpenCVCameraConfig
-from lerobot.common.cameras.opencv.camera_opencv import OpenCVCamera
-from lerobot.common.cameras.configs import ColorMode, Cv2Rotation
+import time
+
 import cv2
+
+from lerobot.common.cameras.configs import ColorMode, Cv2Rotation
+from lerobot.common.cameras.opencv.camera_opencv import OpenCVCamera
+from lerobot.common.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 
 camera_params = [
     # (0, 1920, 1080, 5, Cv2Rotation.NO_ROTATION),
@@ -27,7 +30,6 @@ cameras = [OpenCVCamera(config) for config in configs]
 for camera in cameras:
     camera.connect()
 
-import time
 time.sleep(10)
 
 # Read frames asynchronously in a loop via `async_read(timeout_ms)`

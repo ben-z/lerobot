@@ -1,6 +1,6 @@
 
+
 import cv2
-import time
 
 camera_idx = 0
 backend = cv2.CAP_AVFOUNDATION

@@ -13,11 +13,11 @@
 # limitations under the License.
 
 import logging
+import os
+import time
 from copy import deepcopy
 from enum import Enum
 from pprint import pformat
-import os
-import time
 
 from lerobot.utils.encoding_utils import decode_sign_magnitude, encode_sign_magnitude
 
@@ -253,7 +253,7 @@ class FeetechMotorsBus(MotorsBus):
         )
         print(f"Calibration status: {same_ranges=}, {same_offsets=}")
         if os.getenv("OVERWRITE_CALIBRATION") == "true" and (not same_ranges or not same_offsets):
-            print(f"overwriting calibration in 5 seconds...")
+            print("overwriting calibration in 5 seconds...")
             time.sleep(5)
             self.write_calibration(self.calibration)
             return self.is_calibrated

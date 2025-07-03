@@ -86,8 +86,8 @@ python -m lerobot.record \
     --dataset.episode_time_s=120 \
     --dataset.reset_time_s=1 \
     --dataset.num_episodes=50 \
-    --dataset.repo_id=${HF_USER}/so101_sock_stowing_3pair2 \
-    --dataset.single_task="Put the sock in the container"
+    --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
+    --dataset.single_task="Grasp the eraser and move it to the mat."
 ```
 
 Use `--resume=true` to resume the recording from the last episode.
@@ -95,6 +95,7 @@ Use `--resume=true` to resume the recording from the last episode.
 ### Recorded datasets
 
 - [so101_box_pencil6](https://huggingface.co/un1c0rnio/so101_box_pencil6): Base, top, and end effector cameras
+- [so101_eraser_mat1](https://huggingface.co/un1c0rnio/so101_eraser_mat1): "Grasp the eraser and move it to the mat."
 
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
@@ -433,3 +434,5 @@ Add `--control.resume=true` to resume in the same repo.
 ```sh
 python lerobot/scripts/visualize_dataset_html.py --repo-id un1c0rnio/eval_act_so101_box_pencil5
 ```
+
+Visualize online dataset: https://huggingface.co/spaces/lerobot/visualize_dataset

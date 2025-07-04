@@ -163,12 +163,12 @@ def init_keyboard_listener():
         try:
             # Track modifier keys
             if key == keyboard.Key.cmd_l or key == keyboard.Key.cmd_r:
-                current_keys.add('cmd')
+                current_keys.add("cmd")
             elif key == keyboard.Key.shift or key == keyboard.Key.shift_r:
-                current_keys.add('shift')
-            
+                current_keys.add("shift")
+
             # Check for Command+Shift+Key combinations
-            if 'cmd' in current_keys and 'shift' in current_keys:
+            if "cmd" in current_keys and "shift" in current_keys:
                 if key == keyboard.Key.right:
                     print("Command+Shift+Right pressed. Exiting loop...")
                     events["exit_early"] = True
@@ -182,14 +182,14 @@ def init_keyboard_listener():
                     events["exit_early"] = True
         except Exception as e:
             print(f"Error handling key press: {e}")
-    
+
     def on_release(key):
         # Clear modifier keys when released
         try:
             if key == keyboard.Key.cmd_l or key == keyboard.Key.cmd_r:
-                current_keys.discard('cmd')
+                current_keys.discard("cmd")
             elif key == keyboard.Key.shift or key == keyboard.Key.shift_r:
-                current_keys.discard('shift')
+                current_keys.discard("shift")
         except Exception as e:
             print(f"Error handling key release: {e}")
         return True

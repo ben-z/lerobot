@@ -132,11 +132,27 @@ docker run --rm -it --gpus all -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-
 huggingface-cli login
 # Log into Weights & Biases
 wandb login
-HF_USER=$(huggingface-cli whoami | head -n 1)
-echo "Hugging Face user: $HF_USER"
 ```
 
 Training:
+
+```sh
+CLUSTER_NAME=watgpu
+HF_USER=$(huggingface-cli whoami | head -n 1)
+EXP_SUFFIX="_${CLUSTER_NAME}_b64"
+
+python -m lerobot.scripts.train \
+  --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
+  --policy.type=act \
+  --policy.repo_id=${HF_USER}/act_so101_eraser_mat1 \
+  --output_dir=../outputs/train/act_so101_eraser_mat1${EXP_SUFFIX} \
+  --job_name=act_so101_eraser_mat1${EXP_SUFFIX} \
+  --policy.device=cuda \
+  --wandb.enable=true \
+  --num_workers=4 \
+  --batch_size=64 \
+  --steps=800_000
+```
 
 ```sh
 # wato

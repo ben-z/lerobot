@@ -301,7 +301,7 @@ wandb login
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 
-docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+docker run --rm -it --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main python -m lerobot.scripts.train \
   --dataset.repo_id=${HF_USER}/so101_box_pencil5 \
   --policy.type=act \
   --output_dir=outputs/train/act_so101_box_pencil5 \
@@ -318,9 +318,10 @@ Or using SLURM:
 conda activate lerobot
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main python -m lerobot.scripts.train \
   --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
   --policy.type=act \
+  --policy.repo_id=${HF_USER}/act_so101_eraser_mat1 \
   --output_dir=outputs/train/act_so101_eraser_mat1 \
   --job_name=act_so101_eraser_mat1_wato \
   --policy.device=cuda \
@@ -333,12 +334,12 @@ sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090
 To resume training from a checkpoint, use `--resume=true`:
 
 ```sh
-python lerobot/scripts/train.py \
+python -m lerobot.scripts.train \
   --config_path=outputs/train/act_so101_eraser_mat1/checkpoints/last/pretrained_model/train_config.json \
   --resume=true
 
 # or in SLURM
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=4g ghcr.io/ben-z/lerobot/gpu:main python lerobot/scripts/train.py \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main python -m lerobot.scripts.train \
   --config_path=outputs/train/act_so101_eraser_mat1/checkpoints/last/pretrained_model/train_config.json \
   --resume=true"
 ```
@@ -364,11 +365,13 @@ huggingface-cli upload ${HF_USER}/act_so101_eraser_mat1_${CKPT} \
 Training [SmolVLA](https://huggingface.co/blog/smolvla):
 
 ```sh
+conda activate lerobot
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
-sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g ghcr.io/ben-z/lerobot/gpu-dev2:main python lerobot/scripts/train.py \
+sbatch --partition=compute_dense --cpus-per-task 8 --mem 14G --gres gpu:rtx_4090:1,tmpdisk:20480 --time 5-00:00:00 --wrap "slurm-start-dockerd.sh && DOCKER_HOST=unix:///tmp/run/docker.sock docker run --rm --gpus all -v $(pwd):/lerobot -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/.config/wandb:/root/.config/wandb -v ~/.netrc:/root/.netrc --shm-size=8g --workdir /lerobot/src ghcr.io/ben-z/lerobot/gpu-dev2:main python -m lerobot.scripts.train \
   --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
   --policy.path=lerobot/smolvla_base \
+  --policy.repo_id=${HF_USER}/smolvla_so101_eraser_mat1 \
   --output_dir=outputs/train/smolvla_so101_eraser_mat1 \
   --job_name=smolvla_so101_eraser_mat1_wato \
   --policy.device=cuda \

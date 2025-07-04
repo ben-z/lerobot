@@ -400,7 +400,7 @@ Upload a checkpoint only:
 ls outputs/train/act_so101_eraser_mat1/checkpoints
 
 HF_USER=$(huggingface-cli whoami | head -n 1)
-CKPT=020000
+CKPT=040000
 huggingface-cli upload ${HF_USER}/act_so101_eraser_mat1_${CKPT} \
   outputs/train/act_so101_eraser_mat1/checkpoints/${CKPT}/pretrained_model
 ```

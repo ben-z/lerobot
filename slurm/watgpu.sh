@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=robo
 #SBATCH --gres=gpu:mligpu:1
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=16G
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32G
 #SBATCH --time=3-00:00
 
 source /opt/anaconda3/etc/profile.d/conda.sh
@@ -24,7 +24,7 @@ python -m lerobot.scripts.train \
   --job_name=act_so101_eraser_mat1${EXP_SUFFIX} \
   --policy.device=cuda \
   --wandb.enable=true \
-  --num_workers=4 \
+  --num_workers=16 \
   --batch_size=128 \
   --steps=100_000 \
   --save_freq=1_000

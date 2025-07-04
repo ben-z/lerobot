@@ -6,6 +6,7 @@
 #SBATCH --mem=16G
 #SBATCH --time=3-00:00
 
+source /opt/anaconda3/etc/profile.d/conda.sh
 conda activate lerobot
 
 cd src

@@ -27,4 +27,4 @@ python -m lerobot.scripts.train \
   --num_workers=8 \
   --batch_size=128 \
   --steps=100_000 \
-  --save_freq=1_000
+  --save_freq=5_000

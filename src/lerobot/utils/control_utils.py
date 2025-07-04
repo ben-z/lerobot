@@ -154,23 +154,47 @@ def init_keyboard_listener():
     # Only import pynput if not in a headless environment
     from pynput import keyboard
 
+    # Track the state of modifier keys
+    current_keys = set()
+    cmd_shift_pressed = False
+
     def on_press(key):
+        nonlocal cmd_shift_pressed
         try:
-            if key == keyboard.Key.right:
-                print("Right arrow key pressed. Exiting loop...")
-                events["exit_early"] = True
-            elif key == keyboard.Key.left:
-                print("Left arrow key pressed. Exiting loop and rerecord the last episode...")
-                events["rerecord_episode"] = True
-                events["exit_early"] = True
-            elif key == keyboard.Key.esc:
-                print("Escape key pressed. Stopping data recording...")
-                events["stop_recording"] = True
-                events["exit_early"] = True
+            # Track modifier keys
+            if key == keyboard.Key.cmd_l or key == keyboard.Key.cmd_r:
+                current_keys.add('cmd')
+            elif key == keyboard.Key.shift or key == keyboard.Key.shift_r:
+                current_keys.add('shift')
+            
+            # Check for Command+Shift+Key combinations
+            if 'cmd' in current_keys and 'shift' in current_keys:
+                if key == keyboard.Key.right:
+                    print("Command+Shift+Right pressed. Exiting loop...")
+                    events["exit_early"] = True
+                elif key == keyboard.Key.left:
+                    print("Command+Shift+Left pressed. Exiting loop and rerecording the last episode...")
+                    events["rerecord_episode"] = True
+                    events["exit_early"] = True
+                elif key == keyboard.Key.esc:
+                    print("Command+Shift+Escape pressed. Stopping data recording...")
+                    events["stop_recording"] = True
+                    events["exit_early"] = True
         except Exception as e:
             print(f"Error handling key press: {e}")
+    
+    def on_release(key):
+        # Clear modifier keys when released
+        try:
+            if key == keyboard.Key.cmd_l or key == keyboard.Key.cmd_r:
+                current_keys.discard('cmd')
+            elif key == keyboard.Key.shift or key == keyboard.Key.shift_r:
+                current_keys.discard('shift')
+        except Exception as e:
+            print(f"Error handling key release: {e}")
+        return True
 
-    listener = keyboard.Listener(on_press=on_press)
+    listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     listener.start()
 
     return listener, events

@@ -124,6 +124,7 @@ Same as the legacy notes.
 ## Evaluation
 
 ```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
 python -m lerobot.record  \
   --robot.type=so101_follower \
   --robot.port=$F1_PORT \
@@ -132,13 +133,13 @@ python -m lerobot.record  \
   --teleop.type=so101_leader \
   --teleop.port=$L1_PORT \
   --teleop.id=l1 \
-  --dataset.episode_time_s=60 \
+  --dataset.episode_time_s=120 \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_so101_box_pencil6_060000 \
-  --dataset.single_task="Grasp a box and move it to the right side of the pencil." \
-  --policy.path=${HF_USER}/act_so101_box_pencil6_060000
+  --dataset.repo_id=$HF_USER/eval_so101_eraser_mat1_020000 \
+  --dataset.single_task="Grasp the eraser and move it to the mat." \
+  --policy.path=${HF_USER}/act_so101_eraser_mat1_020000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.
@@ -357,6 +358,7 @@ Upload a checkpoint only:
 # list checkpoints
 ls outputs/train/act_so101_eraser_mat1/checkpoints
 
+HF_USER=$(huggingface-cli whoami | head -n 1)
 CKPT=020000
 huggingface-cli upload ${HF_USER}/act_so101_eraser_mat1_${CKPT} \
   outputs/train/act_so101_eraser_mat1/checkpoints/${CKPT}/pretrained_model

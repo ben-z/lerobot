@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=robo
 #SBATCH --gres=gpu:mligpu:1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=32G
+#SBATCH --cpus-per-task=20
+#SBATCH --mem=64G
 #SBATCH --time=3-00:00
 
 source /opt/anaconda3/etc/profile.d/conda.sh

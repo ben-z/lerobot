@@ -142,12 +142,12 @@ Training:
 # wato
 docker run --rm -it --gpus all -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=wato --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 # paper: Add --user $(id -u):$(id -g) for rootful docker, choose GPU with `--gpus "device=x"`
-docker run --user $(id -u):$(id -g) --rm -it --gpus "device=1" -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=paper --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
+docker run --user $(id -u):$(id -g) --rm -it --gpus "device=0" -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=paper --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 
 # In the container
 # Adjust batch_size based on available VRAM
 HF_USER=$(huggingface-cli whoami | head -n 1)
-EXP_SUFFIX="_l4_b16"
+EXP_SUFFIX="_l4_b8"
 echo "Hugging Face user: $HF_USER"
 python -m lerobot.scripts.train \
   --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
@@ -158,7 +158,7 @@ python -m lerobot.scripts.train \
   --policy.device=cuda \
   --wandb.enable=true \
   --num_workers=4 \
-  --batch_size=16 \
+  --batch_size=8 \
   --steps=800_000
 ```
 

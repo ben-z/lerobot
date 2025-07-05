@@ -238,9 +238,9 @@ python -m lerobot.record  \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_eraser_mat1_wato_020000 \
+  --dataset.repo_id=$HF_USER/eval_act_so101_eraser_mat1_wato_360000 \
   --dataset.single_task="Grasp the eraser and move it to the mat." \
-  --policy.path=${HF_USER}/act_so101_eraser_mat1_wato_020000
+  --policy.path=${HF_USER}/act_so101_eraser_mat1_wato_360000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

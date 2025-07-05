@@ -184,6 +184,10 @@ python -m lerobot.scripts.train \
 
 ```sh
 conda activate lerobot
+# or
+docker run --user $(id -u):$(id -g) --rm -it -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
+
+# In the container
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Uploading checkpoints to user: $HF_USER"
 

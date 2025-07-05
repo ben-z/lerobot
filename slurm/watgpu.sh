@@ -36,7 +36,6 @@ EXP_SUFFIX="_${CLUSTER_NAME}_h200_b256"
 python -m lerobot.scripts.train \
   --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
   --policy.path=lerobot/smolvla_base \
-  --policy.repo_id=${HF_USER}/smolvla_so101_eraser_mat1 \
   --output_dir=../outputs/train/smolvla_so101_eraser_mat1${EXP_SUFFIX} \
   --job_name=smolvla_so101_eraser_mat1${EXP_SUFFIX} \
   --policy.device=cuda \

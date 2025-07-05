@@ -134,7 +134,7 @@ huggingface-cli login
 wandb login
 ```
 
-Training:
+Training (without Docker):
 
 ```sh
 CLUSTER_NAME=watgpu
@@ -153,6 +153,8 @@ python -m lerobot.scripts.train \
   --batch_size=64 \
   --steps=800_000
 ```
+
+Training (with Docker):
 
 ```sh
 # wato
@@ -176,6 +178,43 @@ python -m lerobot.scripts.train \
   --num_workers=4 \
   --batch_size=16 \
   --steps=800_000
+```
+
+### Uploading checkpoints
+
+```sh
+conda activate lerobot
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Uploading checkpoints to user: $HF_USER"
+
+# List models
+echo "Uploading checkpoints for models: $(ls outputs/train)"
+
+for __model_name in $(ls outputs/train); do
+  echo "Uploading checkpoints for model: ${__model_name}"
+
+  # Upload checkpoints
+  __outputs_dir=./outputs/train/${__model_name}
+  if [ ! -d "$__outputs_dir/checkpoints" ]; then
+    echo "Directory ${__outputs_dir}/checkpoints does not exist. Skipping."
+    continue
+  fi
+
+  __ckpts=$(find $__outputs_dir/checkpoints -mindepth 1 -maxdepth 1 -type d ! -lname "*" -exec basename {} \; | sort -r)
+
+  echo "Found checkpoints:"
+  echo $__ckpts
+
+  for __ckpt in $__ckpts; do
+    __hf_repo_id=${HF_USER}/${__model_name}_${__ckpt}
+    echo "Uploading checkpoint: ${__hf_repo_id}"
+    huggingface-cli upload ${__hf_repo_id} \
+      $__outputs_dir/checkpoints/${__ckpt}/pretrained_model
+    
+    echo "Sleeping before next upload..."
+    sleep 10 # work around rate limiting
+  done
+done
 ```
 
 

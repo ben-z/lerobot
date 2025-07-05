@@ -41,7 +41,7 @@ python -m lerobot.scripts.train \
   --job_name=smolvla_so101_eraser_mat1${EXP_SUFFIX} \
   --policy.device=cuda \
   --wandb.enable=true \
-  --num_workers=2 \
+  --num_workers=8 \
   --batch_size=256 \
   --steps=200_000 \
   --save_freq=1_000

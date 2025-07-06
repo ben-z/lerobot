@@ -4,7 +4,7 @@
 #SBATCH --nodelist=watgpu508
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12
-#SBATCH --mem=64G
+#SBATCH --mem=256G
 #SBATCH --time=3-00:00
 
 source /opt/anaconda3/etc/profile.d/conda.sh

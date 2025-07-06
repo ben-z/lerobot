@@ -20,7 +20,8 @@ DATASET_NAME="so101_die_mat1"
 DATASET_REPO_ID=${HF_USER}/${DATASET_NAME}
 
 # act
-BATCH_SIZE=128
+BATCH_SIZE=64
+LR=5e-5
 POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b${BATCH_SIZE}"
 python -m lerobot.scripts.train \
   --dataset.repo_id=${DATASET_REPO_ID} \
@@ -29,7 +30,7 @@ python -m lerobot.scripts.train \
   --output_dir=../outputs/train/${POLICY_REPO_ID} \
   --job_name=${POLICY_REPO_ID}_${CLUSTER_NAME} \
   --policy.device=cuda \
-  --optimizer.lr=1e-4 \
+  --optimizer.lr=${LR} \
   --wandb.enable=true \
   --num_workers=8 \
   --batch_size=${BATCH_SIZE} \

@@ -7,7 +7,8 @@
 # watgpu408: L40S x8 (46068MiB ~45GiB)
 # watgpu502: H200 x2? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu508: H200 x4? (x6 in lspci) (143771MiB ~140GiB)
-#SBATCH --nodelist=watgpu502
+# watgpu608: RTX 6000 Ada x4 (49140MiB ~48GiB), L40S x2 (46068MiB ~45GiB)
+#SBATCH --nodelist=watgpu608
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=256G
@@ -28,8 +29,8 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 # ACT
 # Tuning tips: https://github.com/tonyzhaozh/act/blob/742c753c0d4a5d87076c8f69e5628c79a8cc5488/README.md#new-act-tuning-tips
 # 64 uses ~47GiB VRAM, 128 uses ~93GiB VRAM
-BATCH_SIZE=128
-LR=1e-4
+BATCH_SIZE=64
+LR=5e-5
 POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_${SLURM_JOB_NAME}"
 WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}"
 python -m lerobot.scripts.train \

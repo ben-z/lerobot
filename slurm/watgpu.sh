@@ -1,9 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=robo
-# watgpu208: RTX 6000 Ada (48GB)
-# watgpu508: H200 (141GB)
-#SBATCH --nodelist=watgpu208
+# watgpu208: RTX 6000 Ada (49140MiB)
+# watgpu308: L40S x4 (46068MiB), RTX A6000 x2 (49140MiB), RTX 6000 Ada x2 (49140MiB)
+# watgpu508: H200 (143771MiB)
+#SBATCH --nodelist=watgpu308
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=256G

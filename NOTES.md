@@ -86,8 +86,8 @@ python -m lerobot.record \
     --dataset.episode_time_s=120 \
     --dataset.reset_time_s=1 \
     --dataset.num_episodes=50 \
-    --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
-    --dataset.single_task="Grasp the eraser and move it to the mat."
+    --dataset.repo_id=${HF_USER}/so101_die_mat1 \
+    --dataset.single_task="Grasp the die and put it on the mat."
 ```
 
 Use `--resume=true` to resume the recording from the last episode.
@@ -96,6 +96,7 @@ Use `--resume=true` to resume the recording from the last episode.
 
 - [so101_box_pencil6](https://huggingface.co/un1c0rnio/so101_box_pencil6): Base, top, and end effector cameras
 - [so101_eraser_mat1](https://huggingface.co/un1c0rnio/so101_eraser_mat1): "Grasp the eraser and move it to the mat."
+- [so101_die_mat1](https://huggingface.co/observabot/so101_die_mat1): "Grasp the die and put it on the mat."
 
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
@@ -139,15 +140,19 @@ Training (without Docker):
 ```sh
 CLUSTER_NAME=watgpu
 HF_USER=$(huggingface-cli whoami | head -n 1)
-EXP_SUFFIX="_${CLUSTER_NAME}_b64"
+DATASET_NAME="so101_die_mat1"
+DATASET_REPO_ID=${HF_USER}/${DATASET_NAME}
+POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b64"
+
 
 python -m lerobot.scripts.train \
-  --dataset.repo_id=${HF_USER}/so101_eraser_mat1 \
+  --dataset.repo_id=${DATASET_REPO_ID} \
   --policy.type=act \
-  --policy.repo_id=${HF_USER}/act_so101_eraser_mat1 \
-  --output_dir=../outputs/train/act_so101_eraser_mat1${EXP_SUFFIX} \
-  --job_name=act_so101_eraser_mat1${EXP_SUFFIX} \
+  --policy.repo_id=${POLICY_REPO_ID} \
+  --output_dir=../outputs/train/${POLICY_REPO_ID} \
+  --job_name=${POLICY_REPO_ID}_${CLUSTER_NAME} \
   --policy.device=cuda \
+  --optimizer.lr=5e-5 \
   --wandb.enable=true \
   --num_workers=4 \
   --batch_size=64 \

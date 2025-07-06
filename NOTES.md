@@ -231,6 +231,7 @@ done
 
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
 python -m lerobot.record  \
   --robot.type=so101_follower \
   --robot.port=$F1_PORT \
@@ -243,9 +244,9 @@ python -m lerobot.record  \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_eraser_mat1_paper_l4_b8_400000 \
-  --dataset.single_task="Grasp the eraser and move it to the mat." \
-  --policy.path=${HF_USER}/act_so101_eraser_mat1_paper_l4_b8_400000
+  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat1_b128_005000 \
+  --dataset.single_task="Grasp the die and put it on the mat." \
+  --policy.path=${HF_USER}/act_so101_die_mat1_b128_005000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

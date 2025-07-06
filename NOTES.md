@@ -217,11 +217,7 @@ for __model_name in $(ls outputs/train); do
   for __ckpt in $__ckpts; do
     __hf_repo_id=${HF_USER}/${__model_name}_${__ckpt}
     echo "Uploading checkpoint: ${__hf_repo_id}"
-    huggingface-cli upload ${__hf_repo_id} \
-      $__outputs_dir/checkpoints/${__ckpt}/pretrained_model
-    
-    echo "Sleeping before next upload..."
-    sleep 10 # work around rate limiting
+    huggingface-cli upload ${__hf_repo_id} $__outputs_dir/checkpoints/${__ckpt}/pretrained_model
   done
 done
 ```
@@ -244,9 +240,9 @@ python -m lerobot.record  \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat1_b128_005000 \
+  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat1_b128_010000 \
   --dataset.single_task="Grasp the die and put it on the mat." \
-  --policy.path=${HF_USER}/act_so101_die_mat1_b128_005000
+  --policy.path=${HF_USER}/act_so101_die_mat1_b128_010000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

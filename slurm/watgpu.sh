@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=robo
+#SBATCH --job-name=chunksize1s
 # watgpu108: RTX 6000 Ada x8 (49140MiB ~48GiB)
 # watgpu208: RTX 6000 Ada x8 (49140MiB ~48GiB)
 # watgpu308: L40S x4 (46068MiB ~45GiB), RTX A6000 x2 (49140MiB ~48GiB), RTX 6000 Ada x2 (49140MiB ~48GiB)
@@ -29,7 +29,8 @@ DATASET_REPO_ID=${HF_USER}/${DATASET_NAME}
 # 64 uses ~47GiB VRAM, 128 uses ~93GiB VRAM
 BATCH_SIZE=64
 LR=5e-5
-POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b${BATCH_SIZE}"
+POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b${BATCH_SIZE}_${SLURM_JOB_NAME}"
+WANDB_NOTES="chunk_size=30, n_action_steps=30"
 python -m lerobot.scripts.train \
   --dataset.repo_id=${DATASET_REPO_ID} \
   --policy.type=act \
@@ -41,6 +42,7 @@ python -m lerobot.scripts.train \
   --policy.n_action_steps=30 \
   --optimizer.lr=${LR} \
   --wandb.enable=true \
+  --wandb.notes=${WANDB_NOTES} \
   --num_workers=8 \
   --batch_size=${BATCH_SIZE} \
   --steps=800_000 \

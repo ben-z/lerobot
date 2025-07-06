@@ -175,3 +175,5 @@ dmypy.json
 cython_debug/
 
 /docker-home
+/hf-home/*
+!/hf-home/calibration

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=robo
+# watgpu102: RTX 6000 Ada x2 (x9 in lspci) (49140MiB ~48GiB)
 # watgpu108: RTX 6000 Ada x8 (49140MiB ~48GiB)
 # watgpu208: RTX 6000 Ada x8 (49140MiB ~48GiB)
 # watgpu308: L40S x4 (46068MiB ~45GiB), RTX A6000 x2 (49140MiB ~48GiB), RTX 6000 Ada x2 (49140MiB ~48GiB)
@@ -8,7 +9,7 @@
 # watgpu502: H200 x2? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu508: H200 x4? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu608: RTX 6000 Ada x4 (49140MiB ~48GiB), L40S x2 (46068MiB ~45GiB)
-#SBATCH --nodelist=watgpu608
+#SBATCH --nodelist=watgpu502
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=256G
@@ -18,6 +19,15 @@ source /opt/anaconda3/etc/profile.d/conda.sh
 conda activate lerobot
 
 cd src
+
+# MARK: resume training
+python -m lerobot.scripts.train \
+  --config_path=outputs/train/observabot/act_so101_die_mat1_b128_lr1e-4_robo/checkpoints/last/pretrained_model/train_config.json \
+  --resume=true
+echo "Done!"
+exit 0
+
+# MARK: new training
 CLUSTER_NAME=watgpu
 
 HF_USER=$(huggingface-cli whoami | head -n 1)

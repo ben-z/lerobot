@@ -22,7 +22,7 @@ cd src
 
 # MARK: resume training
 python -m lerobot.scripts.train \
-  --config_path=outputs/train/observabot/act_so101_die_mat1_b128_lr1e-4_robo/checkpoints/last/pretrained_model/train_config.json \
+  --config_path=../outputs/train/observabot/act_so101_die_mat1_b128_lr1e-4_robo/checkpoints/last/pretrained_model/train_config.json \
   --resume=true
 echo "Done!"
 exit 0

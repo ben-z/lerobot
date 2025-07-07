@@ -63,48 +63,48 @@ CLUSTER_NAME=watgpu
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 
-DATASET_NAME="so101_die_mat2"
+DATASET_NAME="so101_die_mat3"
 DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 
-# # ACT
-# # Tuning tips: https://github.com/tonyzhaozh/act/blob/742c753c0d4a5d87076c8f69e5628c79a8cc5488/README.md#new-act-tuning-tips
-# # 64 uses ~47GiB VRAM, 128 uses ~93GiB VRAM
-# BATCH_SIZE=64
-# LR=5e-5
-# POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_${SLURM_JOB_NAME}"
-# WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}"
-# OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"
-# try_resume "${OUTPUT_DIR}"
-# python -m lerobot.scripts.train \
-#   --dataset.repo_id="${DATASET_REPO_ID}" \
-#   --policy.type=act \
-#   --policy.repo_id="${POLICY_REPO_ID}" \
-#   --output_dir="${OUTPUT_DIR}" \
-#   --job_name="${POLICY_REPO_ID}_${CLUSTER_NAME}" \
-#   --policy.device=cuda \
-#   --policy.optimizer_lr="${LR}" \
-#   --wandb.enable=true \
-#   --wandb.notes="${WANDB_NOTES}" \
-#   --num_workers=8 \
-#   --batch_size="${BATCH_SIZE}" \
-#   --steps="800_000" \
-#   --save_freq="5_000"
-
-# SmolVLA
-# 128 uses ~43GiB VRAM
-BATCH_SIZE=128
-POLICY_REPO_ID="${HF_USER}/smolvla_${DATASET_NAME}_b${BATCH_SIZE}_${SLURM_JOB_NAME}"
+# ACT
+# Tuning tips: https://github.com/tonyzhaozh/act/blob/742c753c0d4a5d87076c8f69e5628c79a8cc5488/README.md#new-act-tuning-tips
+# 64 uses ~47GiB VRAM, 128 uses ~93GiB VRAM
+BATCH_SIZE=64
+LR=5e-5
+POLICY_REPO_ID="${HF_USER}/act_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_${SLURM_JOB_NAME}"
+WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}"
 OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"
 try_resume "${OUTPUT_DIR}"
 python -m lerobot.scripts.train \
   --dataset.repo_id="${DATASET_REPO_ID}" \
-  --policy.path=lerobot/smolvla_base \
+  --policy.type=act \
   --policy.repo_id="${POLICY_REPO_ID}" \
   --output_dir="${OUTPUT_DIR}" \
   --job_name="${POLICY_REPO_ID}_${CLUSTER_NAME}" \
   --policy.device=cuda \
+  --policy.optimizer_lr="${LR}" \
   --wandb.enable=true \
+  --wandb.notes="${WANDB_NOTES}" \
   --num_workers=8 \
   --batch_size="${BATCH_SIZE}" \
   --steps="800_000" \
   --save_freq="5_000"
+
+# # SmolVLA
+# # 128 uses ~43GiB VRAM
+# BATCH_SIZE=128
+# POLICY_REPO_ID="${HF_USER}/smolvla_${DATASET_NAME}_b${BATCH_SIZE}_${SLURM_JOB_NAME}"
+# OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"
+# try_resume "${OUTPUT_DIR}"
+# python -m lerobot.scripts.train \
+#   --dataset.repo_id="${DATASET_REPO_ID}" \
+#   --policy.path=lerobot/smolvla_base \
+#   --policy.repo_id="${POLICY_REPO_ID}" \
+#   --output_dir="${OUTPUT_DIR}" \
+#   --job_name="${POLICY_REPO_ID}_${CLUSTER_NAME}" \
+#   --policy.device=cuda \
+#   --wandb.enable=true \
+#   --num_workers=8 \
+#   --batch_size="${BATCH_SIZE}" \
+#   --steps="800_000" \
+#   --save_freq="5_000"

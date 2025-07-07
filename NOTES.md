@@ -86,7 +86,7 @@ python -m lerobot.record \
     --dataset.episode_time_s=120 \
     --dataset.reset_time_s=1 \
     --dataset.num_episodes=50 \
-    --dataset.repo_id=${HF_USER}/so101_die_mat2 \
+    --dataset.repo_id=${HF_USER}/so101_die_mat3 \
     --dataset.single_task="Grasp the die and put it on the mat."
 ```
 
@@ -97,7 +97,8 @@ Use `--resume=true` to resume the recording from the last episode.
 - [so101_box_pencil6](https://huggingface.co/un1c0rnio/so101_box_pencil6): Base, top, and end effector cameras
 - [so101_eraser_mat1](https://huggingface.co/un1c0rnio/so101_eraser_mat1): "Grasp the eraser and move it to the mat."
 - [so101_die_mat1](https://huggingface.co/observabot/so101_die_mat1): "Grasp the die and put it on the mat."
-- [so101_die_mat2](https://huggingface.co/observabot/so101_die_mat2): "Grasp the die and put it on the mat." - Added more episodes, with a focus on consistent mat placement in 3 different locations.
+- [so101_die_mat2](https://huggingface.co/observabot/so101_die_mat2): "Grasp the die and put it on the mat." - Added more episodes to so101_die_mat1, with a focus on lower gripper finger position and consistent mat placement in 3 different locations.
+- [so101_die_mat3](https://huggingface.co/observabot/so101_die_mat3): "Grasp the die and put it on the mat." - Added more episodes to so101_die_mat2, with a focus on larger distances between die and mat, and varying die orientations (the die slips when gripped diagonally and uncentered).
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
 
@@ -241,9 +242,9 @@ python -m lerobot.record  \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat2_b64_lr5e-5_robo_060000 \
+  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat1_b64_lr5e-5_robo_060000 \
   --dataset.single_task="Grasp the die and put it on the mat." \
-  --policy.path=${HF_USER}/act_so101_die_mat2_b64_lr5e-5_robo_060000 
+  --policy.path=${HF_USER}/act_so101_die_mat1_b64_lr5e-5_robo_060000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

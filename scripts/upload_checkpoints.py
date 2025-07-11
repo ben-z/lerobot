@@ -9,14 +9,13 @@ from huggingface_hub.utils import HfHubHTTPError
 app = typer.Typer()
 api = HfApi()
 
-BASE_DIR = Path("outputs/train")
 CHECKPOINT_SUBDIR = "checkpoints"
 PRETRAINED_MODEL_SUBDIR = "pretrained_model"
 
 
-def get_model_dirs(user: str) -> List[Path]:
+def get_model_dirs(base_dir: Path) -> List[Path]:
     return sorted([
-        d for d in (BASE_DIR / user).iterdir()
+        d for d in base_dir.iterdir()
         if d.is_dir()
     ])
 
@@ -32,32 +31,25 @@ def get_checkpoints(model_dir: Path) -> List[Path]:
 
 
 @app.command()
-def discover(echo: bool = True, detailed: bool = False):
+def discover(detailed: bool = False, base_dir: Path = "outputs/train"):
     """
     Discover all models and their checkpoints.
 
     Parameters:
-        echo: If True, print upload commands.
         detailed: If True, print each checkpoint. Otherwise, only print the model name and the number of checkpoints.
+        base_dir: Base directory to search for models.
     """
-    username = whoami()["name"]
-    model_dirs = get_model_dirs(username)
+    model_dirs = get_model_dirs(base_dir)
 
     typer.echo(f"Found {len(model_dirs)} model(s):")
     for model_dir in model_dirs:
         model_name = model_dir.name
         checkpoints = get_checkpoints(model_dir)
         typer.echo(f"\n#{model_name}: {len(checkpoints)} checkpoint(s)")
-        if echo:
-            typer.echo(f"python {__file__} upload '{model_dir}'")
+        typer.echo(f"python {__file__} upload '{model_dir}'")
         if detailed:
             for ckpt in checkpoints:
-                repo_id = f"{username}/{model_name}_{ckpt.name}"
-                if echo:
-                    typer.echo(f"python {__file__} upload '{model_dir}' --checkpoint '{ckpt.name}'")
-                else:
-                    typer.echo(f"- {repo_id}")
-
+                typer.echo(f"python {__file__} upload '{model_dir}' --checkpoint '{ckpt.name}'")
 
 @app.command()
 def upload(
@@ -66,11 +58,13 @@ def upload(
     max_retries: int = typer.Option(10, help="Maximum number of retries"),
     backoff_factor: int = typer.Option(2, help="Backoff factor"),
     initial_backoff: int = typer.Option(10, help="Initial backoff time in seconds"),
+    username: Optional[str] = typer.Option(None, help="Hugging Face user to upload to"),
 ):
     """
     Upload all or one checkpoint for a given model path.
     """
-    username = whoami()["name"]
+    if username is None:
+        username = whoami()["name"]
     model_name = f"{username}/{model_path.name}"
     ckpt_dirs = get_checkpoints(model_path)
 

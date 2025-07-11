@@ -193,7 +193,9 @@ conda activate lerobot
 # or
 docker run --user $(id -u):$(id -g) --rm -it -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 
-python scripts/upload_checkpoints.py discover
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python scripts/upload_checkpoints.py discover --base-dir outputs/train/${HF_USER}
 ```
 
 

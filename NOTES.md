@@ -271,12 +271,32 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.id=f1 \
   --policy_type=act \
   --pretrained_name_or_path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_575000 \
-  --policy_device=cuda \
-  --actions_per_chunk=150 \
-  --chunk_size_threshold=0.5 \
+  --policy_device=mps \
+  --actions_per_chunk=100 \
+  --chunk_size_threshold=0.0 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true
 ```
+
+SmolVLA:
+
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/server/robot_client.py  \
+  --server_address=127.0.0.1:18080 \
+  --robot.type=so101_follower \
+  --robot.port=$F1_PORT \
+  --robot.cameras="${CAMERA_CONFIG}" \
+  --robot.id=f1 \
+  --policy_type=smolvla \
+  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat2_b128_robo_130000 \
+  --policy_device=cuda \
+  --actions_per_chunk=50 \
+  --chunk_size_threshold=0.5 \
+  --aggregate_fn_name=weighted_average \
+  --debug_visualize_queue_size=true
+    ```
 
 ## TODO
 

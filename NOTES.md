@@ -193,35 +193,7 @@ conda activate lerobot
 # or
 docker run --user $(id -u):$(id -g) --rm -it -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 
-upload_checkpoints() {
-  local __train_dir=${1:?}
-  local __model_name=${2:?}
-
-  __ckpts=$(find "$__train_dir/checkpoints" -mindepth 1 -maxdepth 1 -type d ! -lname "*" -exec basename {} \; | sort -r)
-  __num_ckpts=$(echo "$__ckpts" | wc -w)
-  echo "Found $__num_ckpts checkpoint(s):"
-  echo "$__ckpts"
-
-  for __ckpt in $__ckpts; do
-    __hf_repo_id="${__model_name}_${__ckpt}"
-    echo "Uploading checkpoint: ${__hf_repo_id}"
-    huggingface-cli upload "${__hf_repo_id}" "$__train_dir/checkpoints/${__ckpt}/pretrained_model"
-  done
-}
-
-HF_USER=$(huggingface-cli whoami | head -n 1)
-echo "Uploading checkpoints to user: $HF_USER"
-
-__model_paths=$(find "outputs/train/${HF_USER}" -mindepth 1 -maxdepth 1 -type d ! -lname "*")
-__num_models=$(echo "$__model_paths" | wc -w)
-echo "Found $__num_models model(s):"
-echo "$__model_paths"
-
-echo "Run the following commands to upload checkpoints:"
-for __model_path in $__model_paths; do
-  __model_name=$(basename "$__model_path")
-  echo upload_checkpoints "$__model_path" "${HF_USER:?}/${__model_name}"
-done
+python scripts/upload_checkpoints.py discover
 ```
 
 

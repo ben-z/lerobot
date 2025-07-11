@@ -249,6 +249,34 @@ python -m lerobot.record  \
 
 As before, use `--resume=true` to resume the evaluation from the last episode.
 
+### Eval using [async inference](https://huggingface.co/docs/lerobot/en/async)
+
+
+Start the policy server. Port forward the port to the client.
+
+```sh
+python lerobot/scripts/server/policy_server.py --host 0.0.0.0 --port 18080
+```
+
+Run this on the client:
+
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/server/robot_client.py  \
+  --server_address=127.0.0.1:18080 \
+  --robot.type=so101_follower \
+  --robot.port=$F1_PORT \
+  --robot.cameras="${CAMERA_CONFIG}" \
+  --robot.id=f1 \
+  --policy_type=act \
+  --pretrained_name_or_path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_575000 \
+  --policy_device=cuda \
+  --actions_per_chunk=150 \
+  --chunk_size_threshold=0.5 \
+  --aggregate_fn_name=weighted_average \
+  --debug_visualize_queue_size=true
+```
 
 ## TODO
 

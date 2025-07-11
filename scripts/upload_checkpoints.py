@@ -27,7 +27,7 @@ def get_checkpoints(model_dir: Path) -> List[Path]:
         return []
     return sorted([
         d for d in ckpt_base.iterdir()
-        if d.is_dir()
+        if d.is_dir() and not d.is_symlink()
     ], reverse=True)
 
 

@@ -216,9 +216,9 @@ python -m lerobot.record  \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat3_b64_lr5e-5_robo_575000 \
+  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat3_b64_lr5e-5_robo_760000 \
   --dataset.single_task="Grasp the die and put it on the mat." \
-  --policy.path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_575000
+  --policy.path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_760000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.
@@ -244,10 +244,10 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=act \
-  --pretrained_name_or_path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_575000 \
-  --policy_device=mps \
+  --pretrained_name_or_path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_760000 \
+  --policy_device=cuda \
   --actions_per_chunk=100 \
-  --chunk_size_threshold=0.0 \
+  --chunk_size_threshold=0.5 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true
 ```
@@ -265,12 +265,13 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.id=f1 \
   --policy_type=smolvla \
   --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat2_b128_robo_130000 \
+  --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
   --actions_per_chunk=50 \
   --chunk_size_threshold=0.5 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true
-    ```
+```
 
 ## TODO
 

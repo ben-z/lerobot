@@ -131,6 +131,9 @@ class RobotClient:
         self.action_queue_size = []
         self.start_barrier = threading.Barrier(2)  # 2 threads: action receiver, control loop
 
+        # Have only one inference at a time
+        self.inference_semaphore = threading.Semaphore(1)
+
         # FPS measurement
         self.fps_tracker = FPSTracker(target_fps=self.config.fps)
 
@@ -280,6 +283,10 @@ class RobotClient:
             try:
                 # Use StreamActions to get a stream of actions from the server
                 actions_chunk = self.stub.GetActions(async_inference_pb2.Empty())
+
+                # Inference is complete, release the semaphore
+                self.inference_semaphore.release()
+
                 if len(actions_chunk.data) == 0:
                     continue  # received `Empty` from server, wait for next call
 
@@ -466,7 +473,10 @@ class RobotClient:
 
             """Control loop: (2) Streaming observations to the remote policy server"""
             if self._ready_to_send_observation():
-                _captured_observation = self.control_loop_observation(task, verbose)
+                if self.inference_semaphore.acquire(blocking=False):
+                    _captured_observation = self.control_loop_observation(task, verbose)
+                else:
+                    self.logger.debug("Inference already in progress, skipping observation")
 
             self.logger.info(f"Control loop (ms): {(time.perf_counter() - control_loop_start) * 1000:.2f}")
             # Dynamically adjust sleep time to maintain the desired control frequency

@@ -237,7 +237,6 @@ class TimedAction(TimedData):
 @dataclass
 class TimedObservation(TimedData):
     observation: RawObservation
-    must_go: bool = False
 
     def get_observation(self):
         return self.observation

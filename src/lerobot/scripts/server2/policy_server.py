@@ -63,10 +63,7 @@ class PolicyServer(async_inference_pb2_grpc.AsyncInferenceServicer):
 
     def __init__(self, config: PolicyServerConfig):
         self.config = config
-        self._running_event = threading.Event()
-
-        # FPS measurement
-
+        self.running_event = threading.Event()
 
         # Attributes will be set by SendPolicyInstructions
         self.device = None
@@ -76,34 +73,17 @@ class PolicyServer(async_inference_pb2_grpc.AsyncInferenceServicer):
         self.policy = None
 
     @property
-    def running(self):
-        return self._running_event.is_set()
-
-    @property
     def policy_image_features(self):
         return self.policy.config.image_features
 
-    def _reset_server(self) -> None:
-        """Flushes server state when new client connects."""
-        # only running inference on the latest observation received by the server
-        self._running_event.clear()
-
-    def Ready(self, request, context):  # noqa: N802
-        client_id = context.peer()
-        self.logger.info(f"Client {client_id} connected and ready")
-        self._reset_server()
-        self._running_event.set()
-
-        return async_inference_pb2.Empty()
-
     def SendPolicyInstructions(self, request, context):  # noqa: N802
         """Receive policy instructions from the robot client"""
-
-        if not self.running:
-            self.logger.warning("Server is not running. Ignoring policy instructions.")
-            return async_inference_pb2.Empty()
-
         client_id = context.peer()
+
+        if self.running_event.is_set():
+            raise RuntimeError("Server is already running. Cannot re-initialize policy.")
+
+        self.running_event.set()
 
         policy_specs = pickle.loads(request.data)  # nosec
 
@@ -143,31 +123,35 @@ class PolicyServer(async_inference_pb2_grpc.AsyncInferenceServicer):
     def RunInference(self, request_iterator, context):  # noqa: N802
         """Receive a stream of observations, run inference on the first, and return an action chunk."""
         client_id = context.peer()
-        self.logger.debug(f"Running inference for client {client_id}")
+        self.logger.info(f"Receiving observations from {client_id=}")
 
-        try:
-            # The client sends a stream, but for this synchronous-style inference,
-            # we only expect one observation at a time.
-            first_observation_request = next(request_iterator)
+        receive_start = time.perf_counter()
+        received_bytes = receive_bytes_in_chunks(
+            request_iterator, self.running_event, self.logger
+        )  # blocking call while looping over request_iterator
+        receive_end = time.perf_counter()
+        if received_bytes is None:
+            raise RuntimeError("No observations received from client.")
 
-            # Deserialize observation
-            timed_observation = pickle.loads(first_observation_request.data)  # nosec
+        deserialize_start = time.perf_counter()
+        timed_observation: TimedObservation = pickle.loads(received_bytes)  # nosec
+        deserialize_end = time.perf_counter()
 
-            obs_timestep = timed_observation.get_timestep()
-            self.logger.info(f"Received observation #{obs_timestep}")
+        self.logger.info(f"Processed {timed_observation.get_timestep()} observations in {deserialize_end - receive_start:.4f}s (receive: {receive_end - receive_start:.4f}s, deserialize: {deserialize_end - deserialize_start:.4f}s)")
 
-            # Predict action chunk
-            action_chunk = self._predict_action_chunk(timed_observation)
+        inference_start = time.perf_counter()
+        action_chunk = self._predict_action_chunk(timed_observation)
+        inference_end = time.perf_counter()
 
-            # Serialize action chunk
-            actions_bytes = pickle.dumps(action_chunk)  # nosec
+        serialize_start = time.perf_counter()
+        actions_bytes = pickle.dumps(action_chunk)  # nosec
+        serialize_end = time.perf_counter()
 
-            self.logger.info(f"Sending action chunk for step #{obs_timestep}")
-            return async_inference_pb2.Actions(data=actions_bytes)
+        actions = async_inference_pb2.Actions(data=actions_bytes)
 
-        except Exception as e:
-            self.logger.error(f"Error in RunInference: {e}")
-            return async_inference_pb2.Actions(data=b'')
+        self.logger.info(f"Generated action chunk in {serialize_end - inference_start:.4f}s (inference: {inference_end - inference_start:.4f}s, serialize: {serialize_end - serialize_start:.4f}s)")
+
+        return actions
 
     def _time_action_chunk(self, t_0: float, action_chunk: list[torch.Tensor], i_0: int) -> list[TimedAction]:
         """Turn a chunk of actions into a list of TimedAction instances,

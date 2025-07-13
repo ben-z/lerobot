@@ -85,6 +85,7 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 #   --policy.optimizer_lr="${LR}" \
 #   --wandb.enable=true \
 #   --wandb.notes="${WANDB_NOTES}" \
+#   --wandb.disable_artifact=true \
 #   --num_workers=8 \
 #   --batch_size="${BATCH_SIZE}" \
 #   --steps="800_000" \
@@ -95,6 +96,7 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 BATCH_SIZE=128
 LR=1e-3
 POLICY_REPO_ID="${HF_USER}/smolvla_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_${SLURM_JOB_NAME}"
+WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}"
 OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"
 try_resume "${OUTPUT_DIR}"
 python -m lerobot.scripts.train \
@@ -106,6 +108,8 @@ python -m lerobot.scripts.train \
   --policy.device=cuda \
   --policy.optimizer_lr="${LR}" \
   --wandb.enable=true \
+  --wandb.disable_artifact=true \
+  --wandb.notes="${WANDB_NOTES}" \
   --num_workers=8 \
   --batch_size="${BATCH_SIZE}" \
   --steps="800_000" \

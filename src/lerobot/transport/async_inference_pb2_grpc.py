@@ -3,9 +3,9 @@
 import grpc
 import warnings
 
-from lerobot.transport import async_inference_pb2 as async__inference__pb2
+from lerobot.transport import async_inference_pb2 as lerobot_dot_transport_dot_async__inference__pb2
 
-GRPC_GENERATED_VERSION = '1.71.0'
+GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -18,14 +18,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in async_inference_pb2_grpc.py depends on'
+        + f' but the generated code in lerobot/transport/async_inference_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class AsyncInferenceStub:
+class AsyncInferenceStub(object):
     """AsyncInference: from Robot perspective
     Robot send observations to & executes action received from a remote Policy server
     """
@@ -38,32 +38,37 @@ class AsyncInferenceStub:
         """
         self.SendObservations = channel.stream_unary(
                 '/async_inference.AsyncInference/SendObservations',
-                request_serializer=async__inference__pb2.Observation.SerializeToString,
-                response_deserializer=async__inference__pb2.Empty.FromString,
+                request_serializer=lerobot_dot_transport_dot_async__inference__pb2.Observation.SerializeToString,
+                response_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
                 _registered_method=True)
         self.GetActions = channel.unary_unary(
                 '/async_inference.AsyncInference/GetActions',
-                request_serializer=async__inference__pb2.Empty.SerializeToString,
-                response_deserializer=async__inference__pb2.Actions.FromString,
+                request_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+                response_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Actions.FromString,
                 _registered_method=True)
         self.SendPolicyInstructions = channel.unary_unary(
                 '/async_inference.AsyncInference/SendPolicyInstructions',
-                request_serializer=async__inference__pb2.PolicySetup.SerializeToString,
-                response_deserializer=async__inference__pb2.Empty.FromString,
+                request_serializer=lerobot_dot_transport_dot_async__inference__pb2.PolicySetup.SerializeToString,
+                response_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
                 _registered_method=True)
         self.Ready = channel.unary_unary(
                 '/async_inference.AsyncInference/Ready',
-                request_serializer=async__inference__pb2.Empty.SerializeToString,
-                response_deserializer=async__inference__pb2.Empty.FromString,
+                request_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+                response_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
                 _registered_method=True)
         self.Stop = channel.unary_unary(
                 '/async_inference.AsyncInference/Stop',
-                request_serializer=async__inference__pb2.Empty.SerializeToString,
-                response_deserializer=async__inference__pb2.Empty.FromString,
+                request_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+                response_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
+                _registered_method=True)
+        self.RunInference = channel.stream_unary(
+                '/async_inference.AsyncInference/RunInference',
+                request_serializer=lerobot_dot_transport_dot_async__inference__pb2.Observation.SerializeToString,
+                response_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Actions.FromString,
                 _registered_method=True)
 
 
-class AsyncInferenceServicer:
+class AsyncInferenceServicer(object):
     """AsyncInference: from Robot perspective
     Robot send observations to & executes action received from a remote Policy server
     """
@@ -100,33 +105,44 @@ class AsyncInferenceServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RunInference(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AsyncInferenceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SendObservations': grpc.stream_unary_rpc_method_handler(
                     servicer.SendObservations,
-                    request_deserializer=async__inference__pb2.Observation.FromString,
-                    response_serializer=async__inference__pb2.Empty.SerializeToString,
+                    request_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Observation.FromString,
+                    response_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
             ),
             'GetActions': grpc.unary_unary_rpc_method_handler(
                     servicer.GetActions,
-                    request_deserializer=async__inference__pb2.Empty.FromString,
-                    response_serializer=async__inference__pb2.Actions.SerializeToString,
+                    request_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
+                    response_serializer=lerobot_dot_transport_dot_async__inference__pb2.Actions.SerializeToString,
             ),
             'SendPolicyInstructions': grpc.unary_unary_rpc_method_handler(
                     servicer.SendPolicyInstructions,
-                    request_deserializer=async__inference__pb2.PolicySetup.FromString,
-                    response_serializer=async__inference__pb2.Empty.SerializeToString,
+                    request_deserializer=lerobot_dot_transport_dot_async__inference__pb2.PolicySetup.FromString,
+                    response_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
             ),
             'Ready': grpc.unary_unary_rpc_method_handler(
                     servicer.Ready,
-                    request_deserializer=async__inference__pb2.Empty.FromString,
-                    response_serializer=async__inference__pb2.Empty.SerializeToString,
+                    request_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
+                    response_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
             ),
             'Stop': grpc.unary_unary_rpc_method_handler(
                     servicer.Stop,
-                    request_deserializer=async__inference__pb2.Empty.FromString,
-                    response_serializer=async__inference__pb2.Empty.SerializeToString,
+                    request_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
+                    response_serializer=lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+            ),
+            'RunInference': grpc.stream_unary_rpc_method_handler(
+                    servicer.RunInference,
+                    request_deserializer=lerobot_dot_transport_dot_async__inference__pb2.Observation.FromString,
+                    response_serializer=lerobot_dot_transport_dot_async__inference__pb2.Actions.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -136,7 +152,7 @@ def add_AsyncInferenceServicer_to_server(servicer, server):
 
 
  # This class is part of an EXPERIMENTAL API.
-class AsyncInference:
+class AsyncInference(object):
     """AsyncInference: from Robot perspective
     Robot send observations to & executes action received from a remote Policy server
     """
@@ -156,8 +172,8 @@ class AsyncInference:
             request_iterator,
             target,
             '/async_inference.AsyncInference/SendObservations',
-            async__inference__pb2.Observation.SerializeToString,
-            async__inference__pb2.Empty.FromString,
+            lerobot_dot_transport_dot_async__inference__pb2.Observation.SerializeToString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -183,8 +199,8 @@ class AsyncInference:
             request,
             target,
             '/async_inference.AsyncInference/GetActions',
-            async__inference__pb2.Empty.SerializeToString,
-            async__inference__pb2.Actions.FromString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+            lerobot_dot_transport_dot_async__inference__pb2.Actions.FromString,
             options,
             channel_credentials,
             insecure,
@@ -210,8 +226,8 @@ class AsyncInference:
             request,
             target,
             '/async_inference.AsyncInference/SendPolicyInstructions',
-            async__inference__pb2.PolicySetup.SerializeToString,
-            async__inference__pb2.Empty.FromString,
+            lerobot_dot_transport_dot_async__inference__pb2.PolicySetup.SerializeToString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -237,8 +253,8 @@ class AsyncInference:
             request,
             target,
             '/async_inference.AsyncInference/Ready',
-            async__inference__pb2.Empty.SerializeToString,
-            async__inference__pb2.Empty.FromString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,
@@ -264,8 +280,35 @@ class AsyncInference:
             request,
             target,
             '/async_inference.AsyncInference/Stop',
-            async__inference__pb2.Empty.SerializeToString,
-            async__inference__pb2.Empty.FromString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.SerializeToString,
+            lerobot_dot_transport_dot_async__inference__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RunInference(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(
+            request_iterator,
+            target,
+            '/async_inference.AsyncInference/RunInference',
+            lerobot_dot_transport_dot_async__inference__pb2.Observation.SerializeToString,
+            lerobot_dot_transport_dot_async__inference__pb2.Actions.FromString,
             options,
             channel_credentials,
             insecure,

@@ -66,14 +66,7 @@ class PolicyServer(async_inference_pb2_grpc.AsyncInferenceServicer):
         self._running_event = threading.Event()
 
         # FPS measurement
-        self.fps_tracker = FPSTracker(target_fps=config.fps)
 
-        self.observation_queue = Queue(maxsize=1)
-
-        self._predicted_timesteps_lock = threading.Lock()
-        self._predicted_timesteps = set()
-
-        self.last_processed_obs = None
 
         # Attributes will be set by SendPolicyInstructions
         self.device = None
@@ -94,10 +87,6 @@ class PolicyServer(async_inference_pb2_grpc.AsyncInferenceServicer):
         """Flushes server state when new client connects."""
         # only running inference on the latest observation received by the server
         self._running_event.clear()
-        self.observation_queue = Queue(maxsize=1)
-
-        with self._predicted_timesteps_lock:
-            self._predicted_timesteps = set()
 
     def Ready(self, request, context):  # noqa: N802
         client_id = context.peer()
@@ -151,144 +140,34 @@ class PolicyServer(async_inference_pb2_grpc.AsyncInferenceServicer):
 
         return async_inference_pb2.Empty()
 
-    def SendObservations(self, request_iterator, context):  # noqa: N802
-        """Receive observations from the robot client"""
+    def RunInference(self, request_iterator, context):  # noqa: N802
+        """Receive a stream of observations, run inference on the first, and return an action chunk."""
         client_id = context.peer()
-        self.logger.debug(f"Receiving observations from {client_id}")
+        self.logger.debug(f"Running inference for client {client_id}")
 
-        receive_time = time.time()  # comparing timestamps so need time.time()
-        start_deserialize = time.perf_counter()
-        received_bytes = receive_bytes_in_chunks(
-            request_iterator, self._running_event, self.logger
-        )  # blocking call while looping over request_iterator
-        timed_observation = pickle.loads(received_bytes)  # nosec
-        deserialize_time = time.perf_counter() - start_deserialize
-
-        self.logger.debug(f"Received observation #{timed_observation.get_timestep()}")
-
-        obs_timestep = timed_observation.get_timestep()
-        obs_timestamp = timed_observation.get_timestamp()
-
-        # Calculate FPS metrics
-        fps_metrics = self.fps_tracker.calculate_fps_metrics(obs_timestamp)
-
-        self.logger.info(
-            f"Received observation #{obs_timestep} | "
-            f"Avg FPS: {fps_metrics['avg_fps']:.2f} | "  # fps at which observations are received from client
-            f"Target: {fps_metrics['target_fps']:.2f} | "
-            f"One-way latency: {(receive_time - obs_timestamp) * 1000:.2f}ms"
-        )
-
-        self.logger.debug(
-            f"Server timestamp: {receive_time:.6f} | "
-            f"Client timestamp: {obs_timestamp:.6f} | "
-            f"Deserialization time: {deserialize_time:.6f}s"
-        )
-
-        if not self._enqueue_observation(
-            timed_observation  # wrapping a RawObservation
-        ):
-            self.logger.info(f"Observation #{obs_timestep} has been filtered out")
-
-        return async_inference_pb2.Empty()
-
-    def GetActions(self, request, context):  # noqa: N802
-        """Returns actions to the robot client. Actions are sent as a single
-        chunk, containing multiple actions."""
-        client_id = context.peer()
-        self.logger.debug(f"Client {client_id} connected for action streaming")
-
-        # Generate action based on the most recent observation and its timestep
         try:
-            getactions_starts = time.perf_counter()
-            obs = self.observation_queue.get(timeout=self.config.obs_queue_timeout)
-            self.logger.info(
-                f"Running inference for observation #{obs.get_timestep()} (must_go: {obs.must_go})"
-            )
+            # The client sends a stream, but for this synchronous-style inference,
+            # we only expect one observation at a time.
+            first_observation_request = next(request_iterator)
 
-            with self._predicted_timesteps_lock:
-                self._predicted_timesteps.add(obs.get_timestep())
+            # Deserialize observation
+            timed_observation = pickle.loads(first_observation_request.data)  # nosec
 
-            start_time = time.perf_counter()
-            action_chunk = self._predict_action_chunk(obs)
-            inference_time = time.perf_counter() - start_time
+            obs_timestep = timed_observation.get_timestep()
+            self.logger.info(f"Received observation #{obs_timestep}")
 
-            start_time = time.perf_counter()
+            # Predict action chunk
+            action_chunk = self._predict_action_chunk(timed_observation)
+
+            # Serialize action chunk
             actions_bytes = pickle.dumps(action_chunk)  # nosec
-            serialize_time = time.perf_counter() - start_time
 
-            # Create and return the action chunk
-            actions = async_inference_pb2.Actions(data=actions_bytes)
-
-            self.logger.info(
-                f"Action chunk #{obs.get_timestep()} generated | "
-                f"Total time: {(inference_time + serialize_time) * 1000:.2f}ms"
-            )
-
-            self.logger.debug(
-                f"Action chunk #{obs.get_timestep()} generated | "
-                f"Inference time: {inference_time:.2f}s |"
-                f"Serialize time: {serialize_time:.2f}s |"
-                f"Total time: {inference_time + serialize_time:.2f}s"
-            )
-
-            time.sleep(
-                max(0, self.config.inference_latency - max(0, time.perf_counter() - getactions_starts))
-            )  # sleep controls inference latency
-
-            return actions
-
-        except Empty:  # no observation added to queue in obs_queue_timeout
-            return async_inference_pb2.Empty()
+            self.logger.info(f"Sending action chunk for step #{obs_timestep}")
+            return async_inference_pb2.Actions(data=actions_bytes)
 
         except Exception as e:
-            self.logger.error(f"Error in StreamActions: {e}")
-
-            return async_inference_pb2.Empty()
-
-    def _obs_sanity_checks(self, obs: TimedObservation, previous_obs: TimedObservation) -> bool:
-        """Check if the observation is valid to be processed by the policy"""
-        with self._predicted_timesteps_lock:
-            predicted_timesteps = self._predicted_timesteps
-
-        if obs.get_timestep() in predicted_timesteps:
-            self.logger.debug(f"Skipping observation #{obs.get_timestep()} - Timestep predicted already!")
-            return False
-
-        elif observations_similar(obs, previous_obs, lerobot_features=self.lerobot_features):
-            self.logger.debug(
-                f"Skipping observation #{obs.get_timestep()} - Observation too similar to last obs predicted!"
-            )
-            return False
-
-        else:
-            return True
-
-    def _enqueue_observation(self, obs: TimedObservation) -> bool:
-        """Enqueue an observation if it must go through processing, otherwise skip it.
-        Observations not in queue are never run through the policy network"""
-
-        if (
-            obs.must_go
-            or self.last_processed_obs is None
-            or self._obs_sanity_checks(obs, self.last_processed_obs)
-        ):
-            last_obs = self.last_processed_obs.get_timestep() if self.last_processed_obs else "None"
-            self.logger.debug(
-                f"Enqueuing observation. Must go: {obs.must_go} | Last processed obs: {last_obs}"
-            )
-
-            # If queue is full, get the old observation to make room
-            if self.observation_queue.full():
-                # pops from queue
-                _ = self.observation_queue.get_nowait()
-                self.logger.debug("Observation queue was full, removed oldest observation")
-
-            # Now put the new observation (never blocks as queue is non-full here)
-            self.observation_queue.put(obs)
-            return True
-
-        return False
+            self.logger.error(f"Error in RunInference: {e}")
+            return async_inference_pb2.Actions(data=b'')
 
     def _time_action_chunk(self, t_0: float, action_chunk: list[torch.Tensor], i_0: int) -> list[TimedAction]:
         """Turn a chunk of actions into a list of TimedAction instances,

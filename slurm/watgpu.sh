@@ -92,7 +92,8 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 #   --save_freq="5_000"
 
 # SmolVLA
-# 128 uses ~43GiB VRAM
+# 128 uses ~43GiB VRAM with chunk_size=50
+# 64 uses ~25GiB VRAM with chunk_size=100
 BATCH_SIZE=64
 LR=5e-4
 CHUNK_SIZE=100

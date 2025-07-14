@@ -60,15 +60,23 @@ def discover(echo: bool = True, detailed: bool = False, base_dir: Path = Path("o
 
 @app.command()
 def upload(
-    model_path: Path = typer.Argument(..., help="Path to model directory (e.g. outputs/train/user/model_name)"),
-    checkpoint: Optional[str] = typer.Option(None, help="Specific checkpoint name to upload"),
-    max_retries: int = typer.Option(10, help="Maximum number of retries"),
-    backoff_factor: int = typer.Option(2, help="Backoff factor"),
-    initial_backoff: int = typer.Option(10, help="Initial backoff time in seconds"),
-    username: Optional[str] = typer.Option(None, help="Hugging Face user to upload to"),
+    model_path: Path,
+    checkpoint: Optional[str] = None,
+    max_retries: int = 10,
+    backoff_factor: int = 2,
+    initial_backoff: int = 10,
+    username: Optional[str] = None,
 ):
     """
     Upload all or one checkpoint for a given model path.
+
+    Parameters:
+        model_path: Path to model directory (e.g. outputs/train/user/model_name)
+        checkpoint: Specific checkpoint name to upload
+        max_retries: Maximum number of retries
+        backoff_factor: Backoff factor
+        initial_backoff: Initial backoff time in seconds
+        username: Hugging Face user to upload to
     """
     if username is None:
         username = whoami()["name"]
@@ -111,10 +119,14 @@ def upload(
 @app.command()
 def upload_all(
     base_dir: Path = Path("outputs/train"),
-    username: Optional[str] = typer.Option(None, help="Hugging Face user to upload to"),
+    username: Optional[str] = None,
 ):
     """
     Upload all checkpoints for a given user.
+
+    Parameters:
+        base_dir: Base directory to search for models.
+        username: Hugging Face user to upload to.
     """
     if username is None:
         username = whoami()["name"]

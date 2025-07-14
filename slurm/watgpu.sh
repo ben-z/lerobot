@@ -122,6 +122,7 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 
 # pi0fast
 # Default batch_size=8, chunk_size=10 uses ~44GiB VRAM (doesn't fit in L40S)
+# batch_size=4 uses ~39.2GiB VRAM
 BATCH_SIZE=4
 POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_b${BATCH_SIZE}_${SLURM_JOB_NAME}"
 WANDB_NOTES="batch_size=${BATCH_SIZE}"

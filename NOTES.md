@@ -273,6 +273,26 @@ python lerobot/scripts/server/robot_client.py  \
   --debug_visualize_queue_size=true
 ```
 
+pi0fast:
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/server/robot_client.py  \
+  --server_address=127.0.0.1:18080 \
+  --robot.type=so101_follower \
+  --robot.port=$F1_PORT \
+  --robot.cameras="${CAMERA_CONFIG}" \
+  --robot.id=f1 \
+  --policy_type=pi0fast \
+  --pretrained_name_or_path=${HF_USER}/pi0fast_so101_die_mat3_b4_robo_005000 \
+  --task="Grasp the die and put it on the mat." \
+  --policy_device=cuda \
+  --actions_per_chunk=100 \
+  --chunk_size_threshold=0.5 \
+  --aggregate_fn_name=weighted_average \
+  --debug_visualize_queue_size=true
+```
+
 ## TODO
 
 - [x] Figure out why camera resolution is not being set properly.

@@ -10,10 +10,10 @@
 # watgpu502: H200 x2? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu508: H200 x4? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu608: RTX 6000 Ada x4 (49140MiB ~48GiB), L40S x2 (46068MiB ~45GiB)
-#SBATCH --nodelist=watgpu308
+##SBATCH --nodelist=watgpu308
 
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=12
 #SBATCH --mem=128G
 #SBATCH --time=7-00:00
 
@@ -121,9 +121,10 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 #   --save_freq="5_000"
 
 # pi0fast
-# Default batch_size=8, chunk_size=10 uses ~44GiB VRAM
-POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_${SLURM_JOB_NAME}"
-WANDB_NOTES="default settings"
+# Default batch_size=8, chunk_size=10 uses ~44GiB VRAM (doesn't fit in L40S)
+BATCH_SIZE=4
+POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_b${BATCH_SIZE}_${SLURM_JOB_NAME}"
+WANDB_NOTES="batch_size=${BATCH_SIZE}"
 OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"
 try_resume "${OUTPUT_DIR}"
 python -m lerobot.scripts.train \
@@ -136,6 +137,7 @@ python -m lerobot.scripts.train \
   --wandb.enable=true \
   --wandb.disable_artifact=true \
   --wandb.notes="${WANDB_NOTES}" \
-  --num_workers=4 \
+  --num_workers=8 \
+  --batch_size="${BATCH_SIZE}" \
   --steps="800_000" \
   --save_freq="5_000"

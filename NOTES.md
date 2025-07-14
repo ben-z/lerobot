@@ -265,11 +265,11 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=smolvla \
-  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat3_b64_lr5e-4_cs100_nas100_robo_020000 \
+  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat3_b64_lr5e-4_cs200_nas200_robo_045000 \
   --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
-  --actions_per_chunk=100 \
-  --chunk_size_threshold=0.5 \
+  --actions_per_chunk=200 \
+  --chunk_size_threshold=0.8 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true
 ```
@@ -285,10 +285,10 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=pi0fast \
-  --pretrained_name_or_path=${HF_USER}/pi0fast_so101_die_mat3_b4_lr5e-5_cs100_nas100_robo_010000 \
+  --pretrained_name_or_path=${HF_USER}/pi0fast_so101_die_mat3_b8_lr1e-4_cs50_nas50_robo_060000 \
   --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
-  --actions_per_chunk=100 \
+  --actions_per_chunk=50 \
   --chunk_size_threshold=0.0 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true

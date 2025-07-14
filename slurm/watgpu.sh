@@ -10,7 +10,7 @@
 # watgpu502: H200 x2? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu508: H200 x4? (x6 in lspci) (143771MiB ~140GiB)
 # watgpu608: RTX 6000 Ada x4 (49140MiB ~48GiB), L40S x2 (46068MiB ~45GiB)
-##SBATCH --nodelist=watgpu502
+#SBATCH --nodelist=watgpu308
 
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12

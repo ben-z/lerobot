@@ -96,6 +96,7 @@ pygame-dep = ["pygame>=2.5.1"]
 placo-dep = ["placo>=0.9.6"]
 transformers-dep = ["transformers>=4.50.3,<4.52.0"] # TODO: Bumb dependency
 grpcio-dep = ["grpcio==1.73.1", "protobuf==6.31.0"]
+scipy-dep = ["scipy>=1.16.0"]
 
 # Motors
 feetech = ["feetech-servo-sdk>=1.0.0"]
@@ -117,7 +118,7 @@ intelrealsense = [
 # ] # TODO: Currently not supported
 
 # Policies
-pi0 = ["lerobot[transformers-dep]"]
+pi0 = ["lerobot[transformers-dep]", "lerobot[scipy-dep]"]
 smolvla = ["lerobot[transformers-dep]", "num2words>=0.5.14", "accelerate>=1.7.0", "safetensors>=0.4.3"]
 hilserl = ["lerobot[transformers-dep]", "gym-hil>=0.1.9", "lerobot[grpcio-dep]", "lerobot[placo-dep]"]
 

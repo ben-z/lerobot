@@ -12,8 +12,8 @@
 # watgpu608: RTX 6000 Ada x4 (49140MiB ~48GiB), L40S x2 (46068MiB ~45GiB)
 ##SBATCH --nodelist=watgpu308
 
-# Exclude L40S nodes because their VRAM is too low for the job
-#SBATCH --exclude=watgpu308,watgpu408,watgpu608
+# Exclude L40S/A6000/6000Ada nodes because their VRAM is too low for the job
+#SBATCH --exclude=watgpu102,watgpu108,watgpu208,watgpu308,watgpu408,watgpu608
 
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12
@@ -129,12 +129,12 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 
 # pi0fast
 POLICY_TYPE="pi0fast"
-# Default batch_size=8, chunk_size=10 uses ~44-47GiB VRAM (doesn't fit in L40S but fits in RTX 6000 Ada)
+# Default batch_size=8, chunk_size=10 uses ~44-47GiB VRAM (doesn't fit in L40S. Fits in RTX 6000 Ada for a few steps (~3K), but OOMs later.)
 # batch_size=4 uses ~35-40GiB VRAM. It seems to be different each run.
 BATCH_SIZE=8
 LR=1e-4
-CHUNK_SIZE=10
-N_ACTION_STEPS=5
+CHUNK_SIZE=100
+N_ACTION_STEPS=100
 POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_cs${CHUNK_SIZE}_nas${N_ACTION_STEPS}_${SLURM_JOB_NAME}"
 WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}, chunk_size=${CHUNK_SIZE}, n_action_steps=${N_ACTION_STEPS}"
 OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"

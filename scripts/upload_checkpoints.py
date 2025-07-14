@@ -31,11 +31,12 @@ def get_checkpoints(model_dir: Path) -> List[Path]:
 
 
 @app.command()
-def discover(detailed: bool = False, base_dir: Path = "outputs/train"):
+def discover(echo: bool = True, detailed: bool = False, base_dir: Path = Path("outputs/train")):
     """
     Discover all models and their checkpoints.
 
     Parameters:
+        echo: If True, print the commands to upload the checkpoints.
         detailed: If True, print each checkpoint. Otherwise, only print the model name and the number of checkpoints.
         base_dir: Base directory to search for models.
     """
@@ -45,11 +46,17 @@ def discover(detailed: bool = False, base_dir: Path = "outputs/train"):
     for model_dir in model_dirs:
         model_name = model_dir.name
         checkpoints = get_checkpoints(model_dir)
-        typer.echo(f"\n#{model_name}: {len(checkpoints)} checkpoint(s)")
-        typer.echo(f"python {__file__} upload '{model_dir}'")
+        if echo:
+            typer.echo(f"\n#{model_name}: {len(checkpoints)} checkpoint(s)")
+            typer.echo(f"python {__file__} upload '{model_dir}'")
         if detailed:
             for ckpt in checkpoints:
-                typer.echo(f"python {__file__} upload '{model_dir}' --checkpoint '{ckpt.name}'")
+                if echo:
+                    typer.echo(f"python {__file__} upload '{model_dir}' --checkpoint '{ckpt.name}'")
+                else:
+                    yield model_name, model_dir, ckpt.name
+        else:
+            yield model_name, model_dir, None
 
 @app.command()
 def upload(
@@ -96,7 +103,28 @@ def upload(
                     time.sleep(wait)
                 else:
                     typer.echo(f"[{repo_id}] Failed: {e}")
-                    break
+                    raise typer.Exit(1)
+
+@app.command()
+def upload_all(
+    base_dir: Path = Path("outputs/train"),
+    username: Optional[str] = typer.Option(None, help="Hugging Face user to upload to"),
+):
+    """
+    Upload all checkpoints for a given user.
+    """
+    if username is None:
+        username = whoami()["name"]
+
+    discovered = list(discover(echo=False, base_dir=base_dir, detailed=True))
+    typer.echo(f"Uploading {len(discovered)} checkpoints:")
+    for model_name, model_dir, checkpoint in discovered:
+        typer.echo(f"{model_name} ({model_dir}) CKPT: {checkpoint}")
+    
+    typer.confirm("Continue?", abort=True)
+    for model_name, model_dir, checkpoint in discovered:
+        typer.echo(f"Uploading {model_name} ({model_dir}) CKPT: {checkpoint}")
+        upload(model_path=model_dir, checkpoint=checkpoint, username=username)
 
 
 if __name__ == "__main__":

@@ -84,9 +84,9 @@ python -m lerobot.record \
     --teleop.id=l1 \
     --display_data=true \
     --dataset.episode_time_s=120 \
-    --dataset.reset_time_s=1 \
+    --dataset.reset_time_s=6 \
     --dataset.num_episodes=50 \
-    --dataset.repo_id=${HF_USER}/so101_die_mat3 \
+    --dataset.repo_id=${HF_USER}/so101_die_mat4 \
     --dataset.single_task="Grasp the die and put it on the mat."
 ```
 
@@ -97,8 +97,9 @@ Use `--resume=true` to resume the recording from the last episode.
 - [so101_box_pencil6](https://huggingface.co/un1c0rnio/so101_box_pencil6): Base, top, and end effector cameras
 - [so101_eraser_mat1](https://huggingface.co/un1c0rnio/so101_eraser_mat1): "Grasp the eraser and move it to the mat."
 - [so101_die_mat1](https://huggingface.co/observabot/so101_die_mat1): "Grasp the die and put it on the mat."
-- [so101_die_mat2](https://huggingface.co/observabot/so101_die_mat2): "Grasp the die and put it on the mat." - Added more episodes to so101_die_mat1, with a focus on lower gripper finger position and consistent mat placement in 3 different locations.
-- [so101_die_mat3](https://huggingface.co/observabot/so101_die_mat3): "Grasp the die and put it on the mat." - Added more episodes to so101_die_mat2, with a focus on larger distances between die and mat, and varying die orientations (the die slips when gripped diagonally and uncentered).
+- [so101_die_mat2](https://huggingface.co/observabot/so101_die_mat2): "Grasp the die and put it on the mat." - Added more episodes to `so101_die_mat1`, with a focus on lower gripper finger position and consistent mat placement in 3 different locations.
+- [so101_die_mat3](https://huggingface.co/observabot/so101_die_mat3): "Grasp the die and put it on the mat." - Added more episodes to `so101_die_mat2`, with a focus on larger distances between die and mat, and varying die orientations (the die slips when gripped diagonally and uncentered).
+- [so101_die_mat4](https://huggingface.co/observabot/so101_die_mat4): "Grasp the die and put it on the mat." - Not yet recorded. Should add some fault recovery episodes, where we start beside the die instead of from the home position.
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
 

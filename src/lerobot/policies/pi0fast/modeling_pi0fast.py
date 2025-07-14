@@ -195,7 +195,31 @@ class PI0FASTPolicy(PreTrainedPolicy):
     @torch.no_grad()
     def predict_action_chunk(self, batch: dict[str, Tensor]) -> Tensor:
         """Predict a chunk of actions given environment observations."""
-        raise NotImplementedError("Currently not implemented for PI0FAST")
+        self.eval()
+
+        if self.config.adapt_to_pi_aloha:
+            batch[OBS_STATE] = self._pi_aloha_decode_state(batch[OBS_STATE])
+
+        batch = self.normalize_inputs(batch)
+
+        # Action queue logic for n_action_steps > 1. When the action_queue is depleted, populate it by
+        # querying the policy.
+        # if len(self._action_queue) == 0:
+        actions = self.model.generate_actions(batch)
+
+        actions = actions[:, : self.config.n_action_steps]
+
+        original_action_dim = self.config.action_feature.shape[
+            0
+        ]  # self.config.max_action_dim  # self.config.action_feature.shape[0]
+        actions = actions[:, :, :original_action_dim]
+
+        actions = self.unnormalize_outputs({"action": actions})["action"]
+
+        if self.config.adapt_to_pi_aloha:
+            actions = self._pi_aloha_encode_actions(actions)
+
+        return actions
 
     @torch.no_grad()
     def select_action(self, batch: dict[str, Tensor]) -> Tensor:

@@ -121,6 +121,7 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 #   --save_freq="5_000"
 
 # pi0fast
+# Default batch_size=8, chunk_size=10 uses ~44GiB VRAM
 POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_${SLURM_JOB_NAME}"
 WANDB_NOTES="default settings"
 OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"

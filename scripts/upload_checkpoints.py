@@ -41,6 +41,7 @@ def discover(echo: bool = True, detailed: bool = False, base_dir: Path = Path("o
         base_dir: Base directory to search for models.
     """
     model_dirs = get_model_dirs(base_dir)
+    ret = []
 
     typer.echo(f"Found {len(model_dirs)} model(s):")
     for model_dir in model_dirs:
@@ -54,9 +55,11 @@ def discover(echo: bool = True, detailed: bool = False, base_dir: Path = Path("o
                 if echo:
                     typer.echo(f"python {__file__} upload '{model_dir}' --checkpoint '{ckpt.name}'")
                 else:
-                    yield model_name, model_dir, ckpt.name
+                    ret.append((model_name, model_dir, ckpt.name))
         else:
-            yield model_name, model_dir, None
+            ret.append((model_name, model_dir, None))
+
+    return ret
 
 @app.command()
 def upload(
@@ -131,7 +134,7 @@ def upload_all(
     if username is None:
         username = whoami()["name"]
 
-    discovered = list(discover(echo=False, base_dir=base_dir, detailed=True))
+    discovered = discover(echo=False, base_dir=base_dir, detailed=True)
     typer.echo(f"Uploading {len(discovered)} checkpoints:")
     for model_name, model_dir, checkpoint in discovered:
         typer.echo(f"{model_name} ({model_dir}) CKPT: {checkpoint}")

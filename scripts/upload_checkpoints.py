@@ -104,6 +104,9 @@ def upload(
                 else:
                     typer.echo(f"[{repo_id}] Failed: {e}")
                     raise typer.Exit(1)
+        else:
+            typer.echo(f"[{repo_id}] Failed after {max_retries} attempts.")
+            raise typer.Exit(1)
 
 @app.command()
 def upload_all(

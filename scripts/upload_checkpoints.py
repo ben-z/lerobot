@@ -47,6 +47,10 @@ def discover(echo: bool = True, detailed: bool = False, base_dir: Path = Path("o
     for model_dir in model_dirs:
         model_name = model_dir.name
         checkpoints = get_checkpoints(model_dir)
+        if len(checkpoints) == 0:
+            # Skip models with no checkpoints
+            continue
+
         if echo:
             typer.echo(f"\n#{model_name}: {len(checkpoints)} checkpoint(s)")
             typer.echo(f"python {__file__} upload '{model_dir}'")

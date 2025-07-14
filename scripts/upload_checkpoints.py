@@ -140,6 +140,11 @@ def upload_all(
     for model_name, model_dir, checkpoint in discovered:
         typer.echo(f"Uploading {model_name} ({model_dir}) CKPT: {checkpoint}")
         upload(model_path=model_dir, checkpoint=checkpoint, username=username)
+ 
+    typer.echo(f"Done uploading {len(discovered)} checkpoints. You can now delete the checkpoints by running:")
+    for model_name, model_dir, checkpoint in discovered:
+        ckpt_dir = model_dir / CHECKPOINT_SUBDIR / str(checkpoint)
+        typer.echo(f"rm -r {ckpt_dir}")
 
 
 if __name__ == "__main__":

@@ -129,7 +129,7 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 
 # pi0fast
 POLICY_TYPE="pi0fast"
-# Default batch_size=8, chunk_size=10 uses ~44GiB VRAM (doesn't fit in L40S)
+# Default batch_size=8, chunk_size=10 uses ~44-47GiB VRAM (doesn't fit in L40S but fits in RTX 6000 Ada)
 # batch_size=4 uses ~35-40GiB VRAM. It seems to be different each run.
 BATCH_SIZE=8
 LR=1e-4

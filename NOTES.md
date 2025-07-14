@@ -264,7 +264,7 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=smolvla \
-  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat3_b64_lr5e-4_cs100_nas100_robo_005000 \
+  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat3_b64_lr5e-4_cs100_nas100_robo_020000 \
   --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
   --actions_per_chunk=100 \
@@ -292,6 +292,8 @@ python lerobot/scripts/server/robot_client.py  \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true
 ```
+
+Sometimes we may want to slow down the inference, so erratic behavior can be caught. Use `--fps=10` (default is 30) to slow down the inference.
 
 ## TODO
 

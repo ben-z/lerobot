@@ -125,8 +125,10 @@ DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 # batch_size=4 uses ~39.2GiB VRAM
 BATCH_SIZE=4
 LR=5e-5
-POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_${SLURM_JOB_NAME}"
-WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}"
+CHUNK_SIZE=100
+N_ACTION_STEPS=100
+POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_cs${CHUNK_SIZE}_nas${N_ACTION_STEPS}_${SLURM_JOB_NAME}"
+WANDB_NOTES="batch_size=${BATCH_SIZE}, lr=${LR}, chunk_size=${CHUNK_SIZE}, n_action_steps=${N_ACTION_STEPS}"
 OUTPUT_DIR="../outputs/train/${POLICY_REPO_ID}"
 try_resume "${OUTPUT_DIR}"
 python -m lerobot.scripts.train \
@@ -137,6 +139,8 @@ python -m lerobot.scripts.train \
   --job_name="${POLICY_REPO_ID}_${CLUSTER_NAME}" \
   --policy.device=cuda \
   --policy.optimizer_lr="${LR}" \
+  --policy.chunk_size="${CHUNK_SIZE}" \
+  --policy.n_action_steps="${N_ACTION_STEPS}" \
   --wandb.enable=true \
   --wandb.disable_artifact=true \
   --wandb.notes="${WANDB_NOTES}" \

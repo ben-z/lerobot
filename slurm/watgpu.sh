@@ -13,7 +13,7 @@
 #SBATCH --nodelist=watgpu308
 
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=128G
 #SBATCH --time=7-00:00
 
@@ -136,6 +136,6 @@ python -m lerobot.scripts.train \
   --wandb.enable=true \
   --wandb.disable_artifact=true \
   --wandb.notes="${WANDB_NOTES}" \
-  --num_workers=8 \
+  --num_workers=4 \
   --steps="800_000" \
   --save_freq="5_000"

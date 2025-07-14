@@ -264,10 +264,10 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=smolvla \
-  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat2_b128_robo_130000 \
+  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat3_b64_lr5e-4_cs100_nas100_robo_005000 \
   --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
-  --actions_per_chunk=50 \
+  --actions_per_chunk=100 \
   --chunk_size_threshold=0.5 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true

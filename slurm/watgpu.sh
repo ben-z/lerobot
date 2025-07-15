@@ -66,7 +66,7 @@ CLUSTER_NAME=watgpu
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 
-DATASET_NAME="so101_die_mat3"
+DATASET_NAME="so101_die_mat4"
 DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 
 # # ACT
@@ -134,7 +134,7 @@ POLICY_TYPE="pi0fast"
 # batch_size=8, chunk_size=50, n_action_steps=50 uses ~54GiB VRAM
 # batch_size=24, chunk_size=100, n_action_steps=100 uses ~137GiB VRAM
 BATCH_SIZE=24
-LR=5e-3
+LR=1e-2
 CHUNK_SIZE=100
 N_ACTION_STEPS=100
 POLICY_REPO_ID="${HF_USER}/pi0fast_${DATASET_NAME}_b${BATCH_SIZE}_lr${LR}_cs${CHUNK_SIZE}_nas${N_ACTION_STEPS}_${SLURM_JOB_NAME}"

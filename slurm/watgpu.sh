@@ -13,7 +13,7 @@
 ##SBATCH --nodelist=watgpu308
 
 # Exclude L40S/A6000/6000Ada nodes because their VRAM is too low for the job
-#SBATCH --exclude=watgpu102,watgpu108,watgpu208,watgpu308,watgpu408,watgpu608
+##SBATCH --exclude=watgpu102,watgpu108,watgpu208,watgpu308,watgpu408,watgpu608
 
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=12

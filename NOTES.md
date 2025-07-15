@@ -99,7 +99,7 @@ Use `--resume=true` to resume the recording from the last episode.
 - [so101_die_mat1](https://huggingface.co/observabot/so101_die_mat1): "Grasp the die and put it on the mat."
 - [so101_die_mat2](https://huggingface.co/observabot/so101_die_mat2): "Grasp the die and put it on the mat." - Added more episodes to `so101_die_mat1`, with a focus on lower gripper finger position and consistent mat placement in 3 different locations.
 - [so101_die_mat3](https://huggingface.co/observabot/so101_die_mat3): "Grasp the die and put it on the mat." - Added more episodes to `so101_die_mat2`, with a focus on larger distances between die and mat, and varying die orientations (the die slips when gripped diagonally and uncentered).
-- [so101_die_mat4](https://huggingface.co/observabot/so101_die_mat4): "Grasp the die and put it on the mat." - Not yet recorded. Should add some fault recovery episodes, where we start beside the die instead of from the home position.
+- [so101_die_mat4](https://huggingface.co/observabot/so101_die_mat4): "Grasp the die and put it on the mat." - Extended `so101_die_mat3` with more episodes, with a focus on fault recovery (starting beside the die/somewhere else in the workspace instead of the home position).
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
 
@@ -217,9 +217,9 @@ python -m lerobot.record  \
   --dataset.reset_time_s=1 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat3_b64_lr5e-5_robo_760000 \
+  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat4_b64_lr1e-4_robo_010000 \
   --dataset.single_task="Grasp the die and put it on the mat." \
-  --policy.path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_760000
+  --policy.path=${HF_USER}/act_so101_die_mat4_b64_lr1e-4_robo_010000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

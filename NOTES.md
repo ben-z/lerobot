@@ -241,10 +241,10 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=act \
-  --pretrained_name_or_path=${HF_USER}/act_so101_die_mat3_b64_lr5e-5_robo_800000 \
+  --pretrained_name_or_path=${HF_USER}/act_so101_die_mat4_b64_lr1e-4_robo_010000 \
   --policy_device=cuda \
   --actions_per_chunk=100 \
-  --chunk_size_threshold=0.8 \
+  --chunk_size_threshold=0.5 \
   --aggregate_fn_name=weighted_average \
   --debug_visualize_queue_size=true
 ```

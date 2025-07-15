@@ -261,7 +261,7 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
   --policy_type=smolvla \
-  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_010000 \
+  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_050000 \
   --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
   --actions_per_chunk=200 \

@@ -213,9 +213,9 @@ python -m lerobot.record  \
   --dataset.episode_time_s=120 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_act_so101_die_mat4_b64_lr1e-4_robo_010000 \
+  --dataset.repo_id=$HF_USER/eval_smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_050000 \
   --dataset.single_task="Grasp the die and put it on the mat." \
-  --policy.path=${HF_USER}/act_so101_die_mat4_b64_lr1e-4_robo_010000
+  --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_050000
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

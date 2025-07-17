@@ -288,7 +288,7 @@ python lerobot/scripts/server/robot_client.py  \
   --task="Grasp the die and put it on the mat." \
   --policy_device=cuda \
   --actions_per_chunk=200 \
-  --chunk_size_threshold=0.75 \
+  --chunk_size_threshold=1.0 \
   --aggregate_fn_name=latest_only \
   --debug_visualize_queue_size=true
 

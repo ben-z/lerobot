@@ -213,10 +213,11 @@ python -m lerobot.record  \
   --dataset.episode_time_s=120 \
   --dataset.num_episodes=25 \
   --display_data=true \
-  --dataset.repo_id=$HF_USER/eval_smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_110000 \
+  --dataset.repo_id=$HF_USER/eval_smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_110000_test \
   --dataset.single_task="Grasp the die and put it on the mat." \
   --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_110000 \
-  --policy.n_action_steps=50
+  --policy.n_action_steps=50 \
+  --policy.inference_enable_rtc=true
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

@@ -273,6 +273,31 @@ python lerobot/scripts/server/robot_client.py  \
   --debug_visualize_queue_size=true
 ```
 
+smolvla with RTC:
+```sh
+HF_USER=$(huggingface-cli whoami | head -n 1)
+echo "Hugging Face user: $HF_USER"
+python lerobot/scripts/server/robot_client.py  \
+  --server_address=127.0.0.1:18080 \
+  --robot.type=so101_follower \
+  --robot.port=$F1_PORT \
+  --robot.cameras="${CAMERA_CONFIG}" \
+  --robot.id=f1 \
+  --policy_type=smolvla \
+  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_110000 \
+  --task="Grasp the die and put it on the mat." \
+  --policy_device=cuda \
+  --actions_per_chunk=200 \
+  --chunk_size_threshold=0.75 \
+  --aggregate_fn_name=latest_only \
+  --debug_visualize_queue_size=true
+
+  # RTC parameters. Hard-coded in policy_server.py (https://github.com/ben-z/lerobot/commit/00aa12eae23f58aadce42d916b1b08a0a56db750) until we have the infrastructure to send them from the client.
+  # --policy.inference_enable_rtc=true \
+  # --policy.inference_rtc_s=50 \
+  # --policy.inference_rtc_d=25 \
+```
+
 pi0fast:
 ```sh
 HF_USER=$(huggingface-cli whoami | head -n 1)

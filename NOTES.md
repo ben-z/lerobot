@@ -125,10 +125,10 @@ Result: not working. The command queue doesn't appear to be processed.
 One-time setup:
 
 ```sh
-mkdir -p docker-home
+mkdir -p data/docker-home
 
 # Add --user $(id -u):$(id -g) if using rootful docker
-docker run --rm -it --gpus all -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
+docker run --rm -it --gpus all -v $(pwd):/lerobot -v $(pwd)/data/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 
 # In the container
 # Log into Hugging Face
@@ -165,9 +165,9 @@ Training (with Docker):
 
 ```sh
 # wato
-docker run --rm -it --gpus all -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=wato --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
+docker run --rm -it --gpus all -v $(pwd):/lerobot -v $(pwd)/data/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=wato --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 # paper: Add --user $(id -u):$(id -g) for rootful docker, choose GPU with `--gpus "device=x"`
-docker run --user $(id -u):$(id -g) --rm -it --gpus "device=3" -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=paper --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
+docker run --user $(id -u):$(id -g) --rm -it --gpus "device=3" -v $(pwd):/lerobot -v $(pwd)/data/docker-home:/docker-home -e HOME=/docker-home -e CLUSTER_NAME=paper --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 
 # In the container
 # Adjust batch_size based on available VRAM
@@ -192,7 +192,7 @@ python -m lerobot.scripts.train \
 ```sh
 conda activate lerobot
 # or
-docker run --user $(id -u):$(id -g) --rm -it -v $(pwd):/lerobot -v $(pwd)/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
+docker run --user $(id -u):$(id -g) --rm -it -v $(pwd):/lerobot -v $(pwd)/data/docker-home:/docker-home -e HOME=/docker-home --shm-size=8g --workdir=/lerobot/src ghcr.io/ben-z/lerobot/gpu:main bash
 
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"

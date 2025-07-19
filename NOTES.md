@@ -303,10 +303,9 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.port=$F1_PORT \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
-  --policy_type=pi0fast \
-  --pretrained_name_or_path=${HF_USER}/pi0fast_so101_die_mat3_b8_lr1e-4_cs50_nas50_robo_060000 \
+  --policy.path=${HF_USER}/pi0fast_so101_die_mat3_b8_lr1e-4_cs50_nas50_robo_060000 \
   --task="Grasp the die and put it on the mat." \
-  --policy_device=cuda \
+  --policy.device=cuda \
   --actions_per_chunk=50 \
   --chunk_size_threshold=0.0 \
   --aggregate_fn_name=weighted_average \

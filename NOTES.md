@@ -243,9 +243,8 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.port=$F1_PORT \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
-  --policy_type=act \
-  --pretrained_name_or_path=${HF_USER}/act_so101_die_mat4_b64_lr1e-4_robo_010000 \
-  --policy_device=cuda \
+  --policy.path=${HF_USER}/act_so101_die_mat4_b64_lr1e-4_robo_010000 \
+  --policy.device=cuda \
   --actions_per_chunk=100 \
   --chunk_size_threshold=0.5 \
   --aggregate_fn_name=weighted_average \
@@ -263,10 +262,10 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.port=$F1_PORT \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
-  --policy_type=smolvla \
-  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs100_nas100_robo_040000 \
+  --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs100_nas100_robo_040000 \
   --task="Grasp the die and put it on the mat." \
-  --policy_device=cuda \
+  --policy.device=cuda \
+  --policy.compile_model=true \
   --actions_per_chunk=100 \
   --chunk_size_threshold=1.0 \
   --aggregate_fn_name=weighted_average \
@@ -283,19 +282,15 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.port=$F1_PORT \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
-  --policy_type=smolvla \
-  --pretrained_name_or_path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs100_nas100_robo_040000 \
+  --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs100_nas100_robo_040000 \
   --task="Grasp the die and put it on the mat." \
-  --policy_device=cuda \
+  --policy.device=cuda \
+  --policy.compile_model=true \
+  --policy.inference_enable_rtc=true \
   --actions_per_chunk=100 \
   --chunk_size_threshold=1.0 \
   --aggregate_fn_name=latest_only \
   --debug_visualize_queue_size=true
-
-  # RTC parameters. Hard-coded in policy_server.py (https://github.com/ben-z/lerobot/commit/00aa12eae23f58aadce42d916b1b08a0a56db750) until we have the infrastructure to send them from the client.
-  # --policy.inference_enable_rtc=true \
-  # --policy.inference_rtc_s=50 \
-  # --policy.inference_rtc_d=25 \
 ```
 
 pi0fast:

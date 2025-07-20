@@ -281,7 +281,7 @@ python lerobot/scripts/server/robot_client.py  \
   --robot.port=$F1_PORT \
   --robot.cameras="${CAMERA_CONFIG}" \
   --robot.id=f1 \
-  --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs100_nas100_robo_040000 \
+  --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs100_nas100_robo_200000 \
   --task="Grasp the die and put it on the mat." \
   --policy.device=cuda \
   --policy.compile_model=true \
@@ -290,7 +290,8 @@ python lerobot/scripts/server/robot_client.py  \
   --aggregate_fn_name=latest_only \
   --debug_visualize_queue_size=true \
   --policy.inference_enable_rtc=true \
-  --policy.inference_rtc_soft_mask_length=75
+  --policy.inference_rtc_d=15 \
+  --policy.inference_rtc_soft_mask_length=15
 ```
 
 pi0fast:

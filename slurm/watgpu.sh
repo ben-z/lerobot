@@ -66,7 +66,7 @@ CLUSTER_NAME=watgpu
 HF_USER=$(huggingface-cli whoami | head -n 1)
 echo "Hugging Face user: $HF_USER"
 
-DATASET_NAME="so101_die_mat4"
+DATASET_NAME="so101_cloth_folding1"
 DATASET_REPO_ID="${HF_USER}/${DATASET_NAME}"
 
 # # ACT

@@ -217,8 +217,7 @@ python -m lerobot.record  \
   --dataset.single_task="Grasp the die and put it on the mat." \
   --policy.path=${HF_USER}/smolvla_so101_die_mat4_b64_lr5e-4_cs200_nas200_robo_110000 \
   --policy.n_action_steps=100 \
-  --policy.inference_enable_rtc=true \
-  --policy.inference_rtc_s=100
+  --policy.inference_enable_rtc=true
 ```
 
 As before, use `--resume=true` to resume the evaluation from the last episode.

@@ -285,11 +285,12 @@ python lerobot/scripts/server/robot_client.py  \
   --task="Grasp the die and put it on the mat." \
   --policy.device=cuda \
   --policy.compile_model=true \
-  --policy.inference_enable_rtc=true \
   --actions_per_chunk=100 \
   --chunk_size_threshold=1.0 \
   --aggregate_fn_name=latest_only \
-  --debug_visualize_queue_size=true
+  --debug_visualize_queue_size=true \
+  --policy.inference_enable_rtc=true \
+  --policy.inference_rtc_soft_mask_length=75
 ```
 
 pi0fast:

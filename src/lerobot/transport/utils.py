@@ -20,7 +20,7 @@ import json
 import logging
 import pickle  # nosec B403: Safe usage for internal serialization only
 from multiprocessing import Event, Queue
-from typing import Any, Optional
+from typing import Any
 
 import torch
 

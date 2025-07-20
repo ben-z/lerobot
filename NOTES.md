@@ -83,11 +83,11 @@ python -m lerobot.record \
     --teleop.port=$L1_PORT \
     --teleop.id=l1 \
     --display_data=true \
-    --dataset.episode_time_s=120 \
+    --dataset.episode_time_s=240 \
     --dataset.reset_time_s=6 \
     --dataset.num_episodes=50 \
-    --dataset.repo_id=${HF_USER}/so101_die_mat4 \
-    --dataset.single_task="Grasp the die and put it on the mat."
+    --dataset.repo_id=${HF_USER}/so101_cloth_folding1 \
+    --dataset.single_task="Fold the cloth."
 ```
 
 Use `--resume=true` to resume the recording from the last episode.
@@ -100,6 +100,7 @@ Use `--resume=true` to resume the recording from the last episode.
 - [so101_die_mat2](https://huggingface.co/observabot/so101_die_mat2): "Grasp the die and put it on the mat." - Added more episodes to `so101_die_mat1`, with a focus on lower gripper finger position and consistent mat placement in 3 different locations.
 - [so101_die_mat3](https://huggingface.co/observabot/so101_die_mat3): "Grasp the die and put it on the mat." - Added more episodes to `so101_die_mat2`, with a focus on larger distances between die and mat, and varying die orientations (the die slips when gripped diagonally and uncentered).
 - [so101_die_mat4](https://huggingface.co/observabot/so101_die_mat4): "Grasp the die and put it on the mat." - Extended `so101_die_mat3` with more episodes, with a focus on fault recovery (starting beside the die/somewhere else in the workspace instead of the home position).
+- [so101_cloth_folding1](https://huggingface.co/observabot/so101_cloth_folding1): "Fold the cloth." - 25 episodes of nominal folding. With some fault recovery (e.g. creases causing the cloth to stack on itself when folding).
 
 ## Teleop with [telegrip](https://github.com/DipFlip/telegrip)
 

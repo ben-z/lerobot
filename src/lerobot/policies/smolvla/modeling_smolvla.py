@@ -1071,20 +1071,21 @@ class VLAFlowMatching(nn.Module):
 
         while t >= -dt / 2:
             tau = 1 - t  # tau goes from 0 to 1, to be consistent with the paper
-            # ΠGDM guidance
-            denoise_start = time.perf_counter()
-            v_pi = -self.denoise_step(prefix_pad_masks, past_key_values, A_tau, t.expand(bsize))
-            denoise_time += time.perf_counter() - denoise_start
 
-            grad_start = time.perf_counter()
             A_tau.requires_grad_(True)
             with torch.enable_grad():
+                # ΠGDM guidance
+                denoise_start = time.perf_counter()
+                v_pi = -self.denoise_step(prefix_pad_masks, past_key_values, A_tau, t.expand(bsize))
+                denoise_time += time.perf_counter() - denoise_start
+
+                grad_start = time.perf_counter()
                 # Â¹_tau   Eq. 3
                 A_hat = A_tau + (1 - tau) * v_pi  # noqa: N806
                 err = (A_prev - A_hat) * W_row
                 grad_outputs = err.clone().detach()
                 g = torch.autograd.grad(A_hat, A_tau, grad_outputs, retain_graph=True)[0]
-            grad_time += time.perf_counter() - grad_start
+                grad_time += time.perf_counter() - grad_start
 
             r_sq = (1 - tau) ** 2 / (tau**2 + (1 - tau) ** 2)  # Eq. 4
             scale = min(self.config.inference_rtc_beta, (1 - tau) / (tau * r_sq))  # Eq.2
@@ -1106,7 +1107,7 @@ class VLAFlowMatching(nn.Module):
         A_tau_d_err = (A_prev[:, :rtc_d] - A_tau[:, :rtc_d]).norm()  # noqa: N806
         if A_tau_d_err > 0.5:
             print(
-                f"WARNING: [RTC] The first {rtc_d=} steps of the new chunk are too different from the previous chunk. This may result in jerky motion. {A_tau_d_err=}"
+                f"WARNING: [RTC] The first {rtc_d=} steps of the new chunk are too different from the previous chunk. This may result in jerky motion. {A_tau_d_err=:.2f}"
             )
 
         total_time = time.perf_counter() - total_start
